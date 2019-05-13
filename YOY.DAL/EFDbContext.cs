@@ -13,7 +13,7 @@ namespace YOY.DAL
     /// </summary>
     public class EFDbContext : DbContext
     {
-        public EFDbContext(): base("name=Local")
+        public EFDbContext(): base("name=Cloud")
         {
             //不检查一致性
             Database.SetInitializer<EFDbContext>(null);
