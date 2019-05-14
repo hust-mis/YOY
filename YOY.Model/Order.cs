@@ -56,5 +56,12 @@ namespace YOY.Model
         [Column("CommodityNum")]
         [DataMember]
         public int CommodityNum { get; set; }
+
+        /// <summary>
+        /// 消费完成时间，YYYY-MM-DD hh:mm:ss
+        /// </summary>
+        [Column("DoneTime")]
+        [DataMember]
+        public string DoneTime { get; set; }
     }
 }

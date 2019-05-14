@@ -67,13 +67,6 @@ namespace YOY.Model
         public int VisitorState { get; set; }
 
         /// <summary>
-        /// 游玩时间，YYYY-MM-DD
-        /// </summary>
-        [Column("PlayTime")]
-        [DataMember]
-        public string PlayTime { get; set; }
-
-        /// <summary>
         /// 失效时间，超时间后更改激活状态，YYYY-MM-DD hh:mm:ss
         /// </summary>
         [Column("Expiration")]
