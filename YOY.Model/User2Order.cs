@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -25,6 +26,7 @@ namespace YOY.Model
         /// <summary>
         /// 订单ID
         /// </summary>
+        [Key]
         [Column("OrderID")]
         [DataMember]
         public string OrderID { get; set; }

@@ -71,16 +71,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UserHelper.svc" />
+    <Content Include="TicketPurchase.svc" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserHelper.svc.cs">
-      <DependentUpon>UserHelper.svc</DependentUpon>
+    <Compile Include="ITicketPurchase.cs" />
+    <Compile Include="TicketPurchase.svc.cs">
+      <DependentUpon>TicketPurchase.svc</DependentUpon>
     </Compile>
-    <Compile Include="IUserHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

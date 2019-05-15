@@ -67,10 +67,10 @@ namespace YOY.Model
         public int VisitorState { get; set; }
 
         /// <summary>
-        /// 失效时间，超时间后更改激活状态，YYYY-MM-DD hh:mm:ss
+        /// 游玩时间，超时间后更改激活状态，YYYY-MM-DD
         /// </summary>
-        [Column("Expiration")]
+        [Column("PlayTime")]
         [DataMember]
-        public string Expiration { get; set; }
+        public DateTime PlayTime { get; set; }
     }
 }

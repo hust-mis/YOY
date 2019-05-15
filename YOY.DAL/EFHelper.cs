@@ -39,6 +39,35 @@ namespace YOY.DAL
         }
 
         /// <summary>
+        /// 添加列表实体
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="list">实体列表</param>
+        /// <returns>返回添加记录数</returns>
+        public static int AddList<T>(List<T> list) where T : class
+        {
+            if (list == null || list.Count == 0) return 0;
+
+            using (var db = new EFDbContext())
+            {
+                foreach( T item in list)
+                {
+                    db.Set<T>().Add(item);
+                    db.Entry(item).State = EntityState.Added;
+                }
+
+                try
+                {
+                    return db.SaveChanges() ;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
         /// 删除操作
         /// </summary>
         /// <typeparam name="T">实体类型/表</typeparam>
@@ -56,6 +85,30 @@ namespace YOY.DAL
                 try
                 {
                     return db.SaveChanges() > 0;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量删除操作
+        /// </summary>
+        /// <typeparam name="T">实体类型</typeparam>
+        /// <param name="list">实体列表</param>
+        /// <returns>影响行数</returns>
+        public static int DeleteList<T>(List<T> list) where T :class
+        {
+            if (list == null || list.Count == 0) return 0;
+
+            using (var db = new EFDbContext())
+            {
+                db.Set<T>().RemoveRange(list);
+                try
+                {
+                    return db.SaveChanges();
                 }
                 catch (Exception ex)
                 {

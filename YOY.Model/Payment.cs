@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,6 +19,7 @@ namespace YOY.Model
         /// <summary>
         /// 订单ID，对应的订单
         /// </summary>
+        [Key]
         [Column("OrderID")]
         [DataMember]
         public string OrderID { get; set; }
@@ -41,6 +43,6 @@ namespace YOY.Model
         /// </summary>
         [Column("PaymentTime")]
         [DataMember]
-        public string PaymentTime { get; set; }
+        public DateTime PaymentTime { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -18,7 +19,8 @@ namespace YOY.Model
         /// <summary>
         /// 订单ID
         /// </summary>
-        [Column("OrderID")]
+        [Key]
+        [Column("OrderID",Order =1)]
         [DataMember]
         public string OrderID { get; set; }
 
@@ -27,7 +29,7 @@ namespace YOY.Model
         /// </summary>
         [Column("OrderTime")]
         [DataMember]
-        public string OrderTime { get; set; }
+        public DateTime OrderTime { get; set; }
 
         /// <summary>
         /// 订单状态，0：未支付，1：已支付
@@ -39,7 +41,8 @@ namespace YOY.Model
         /// <summary>
         /// 商品ID，订单中包含的商品
         /// </summary>
-        [Column("CommodityID")]
+        [Key]
+        [Column("CommodityID", Order = 2)]
         [DataMember]
         public string CommodityID { get; set; }
 
@@ -58,10 +61,10 @@ namespace YOY.Model
         public int CommodityNum { get; set; }
 
         /// <summary>
-        /// 消费完成时间，YYYY-MM-DD hh:mm:ss
+        /// 商品完成时间，YYYY-MM-DD hh:mm:ss
         /// </summary>
         [Column("DoneTime")]
         [DataMember]
-        public string DoneTime { get; set; }
+        public DateTime DoneTime { get; set; }
     }
 }
