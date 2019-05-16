@@ -32,7 +32,7 @@ namespace YOY.Model
         public DateTime OrderTime { get; set; }
 
         /// <summary>
-        /// 订单状态，0：未支付，1：已支付
+        /// 订单状态，0：未支付，1：已支付，-1：已退款
         /// </summary>
         [Column("OrderState")]
         [DataMember]

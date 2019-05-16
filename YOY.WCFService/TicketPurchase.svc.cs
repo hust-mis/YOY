@@ -32,7 +32,6 @@ namespace YOY.WCFService
             }
         }
 
-
         public Stream BuyTickets(User user, string doneTime, List<Order> orders)
         {
 
@@ -130,7 +129,6 @@ namespace YOY.WCFService
             return ResponseHelper.Success(ticketOrders.Select( t => t.OrderID).ToList());
         }
 
-
         public Stream Pay(List<Payment> payments)
         {
             if (payments == null || payments.Count == 0)
@@ -162,6 +160,136 @@ namespace YOY.WCFService
             }
 
             return ResponseHelper.Success(null);
+        }
+
+        public Stream Login(User user)
+        {
+            if (user == null || string.IsNullOrEmpty(user.PhoneNumber) || string.IsNullOrEmpty(user.UID))
+                return ResponseHelper.Failure("用户信息不完全！");
+
+            try
+            {
+                using (var db = new EFDbContext())
+                {
+                    var query = db.Users.Where(t => t.PhoneNumber == user.PhoneNumber).Single();
+                    if (query == null) return ResponseHelper.Failure("用户不存在！");
+                    if (query.UID != user.UID) return ResponseHelper.Failure("身份证号码错误！");
+                    return ResponseHelper.Success(new List<User>() { query });
+                }
+            }
+            catch(Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
+        }
+
+        public Stream AvailTickets(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+                return ResponseHelper.Failure("手机号码不能为空！");
+
+            try
+            {
+                using(var db = new EFDbContext())
+                {
+                    var U2O2V = from u2o in db.User2Orders
+                                where u2o.PhoneNumber == phoneNumber
+                                join v in db.Visitors on u2o.VisitorID equals v.VisitorID
+                                where v.VisitorState == 0
+                                select new { u2o.OrderID, u2o.VisitorID, v.Password, v.PlayTime };
+
+                    var query = from o in db.Orders
+                                join t in db.Tickets on o.CommodityID equals t.TicketID
+                                join u2o2v in U2O2V on o.OrderID equals u2o2v.OrderID
+                                select new { u2o2v.OrderID, t.TicketName, u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
+
+                    var result = from q in query.ToList()
+                                 select new { q.OrderID, q.TicketName, q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
+
+                    if (query == null) return ResponseHelper.Success(null);
+                    else return ResponseHelper.Success(result.ToList());
+                }
+            }
+            catch(Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
+        }
+
+        public Stream UnavailTickets(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+                return ResponseHelper.Failure("手机号码不能为空！");
+
+            try
+            {
+                using (var db = new EFDbContext())
+                {
+                    var U2O2V = from u2o in db.User2Orders
+                                where u2o.PhoneNumber == phoneNumber
+                                join v in db.Visitors on u2o.VisitorID equals v.VisitorID
+                                where v.VisitorState == 1 || v.VisitorState == 2
+                                select new { u2o.OrderID, u2o.VisitorID, v.Password, v.PlayTime };
+
+                    var query = from o in db.Orders
+                                join t in db.Tickets on o.CommodityID equals t.TicketID
+                                join u2o2v in U2O2V on o.OrderID equals u2o2v.OrderID
+                                select new { u2o2v.OrderID, t.TicketName, u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
+
+                    var result = from q in query.ToList()
+                                 select new { q.OrderID, q.TicketName, q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
+
+                    if (query == null) return ResponseHelper.Success(null);
+                    else return ResponseHelper.Success(result.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
+        }
+
+        public Stream Refund(string orderID)
+        {
+            if (string.IsNullOrEmpty(orderID))
+                return ResponseHelper.Failure("订单编号不能为空！");
+
+            try
+            {
+                using (var db = new EFDbContext())
+                {
+                    var order = db.Orders.Where(t => t.OrderID == orderID).Single();
+                    if( order == null ) return ResponseHelper.Failure("该订单不存在！");
+                    var u2o = db.User2Orders.Where(t => t.OrderID == orderID).Single();
+                    var visitor = db.Visitors.Where(t => t.VisitorID == u2o.VisitorID).Single();
+
+                    //修改数据库中相关记录
+                    order.OrderState = -1;
+                    u2o.VisitorID = string.Empty;
+                    db.Visitors.Remove(visitor);
+                    db.SaveChanges();
+
+                    var query = db.Payments.Where(t => t.OrderID == orderID).Select(t => new { t.PaymentAmount, t.PaymentType }).ToList();
+                    return ResponseHelper.Success(query);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
         }
     }
 }
