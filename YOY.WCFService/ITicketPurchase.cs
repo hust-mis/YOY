@@ -41,22 +41,7 @@ namespace YOY.WCFService
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "BuyTickets")]
-        Stream BuyTickets(User user , string DoneTime , List<Order> orders );
-
-        /// <summary>
-        /// 支付
-        /// </summary>
-        /// <param name="OrderID">每张门票对应的订单编号</param>
-        /// <param name="PaymentAmount">支付的金额</param>
-        /// <param name="PaymentType">支付方式</param>
-        /// <returns>支付结果的JSON字符串</returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-        RequestFormat = WebMessageFormat.Json,
-        ResponseFormat = WebMessageFormat.Json,
-        BodyStyle = WebMessageBodyStyle.WrappedRequest,
-        UriTemplate = "Pay")]
-        Stream Pay(List<Payment> payments);
+        Stream BuyTickets(User user , string DoneTime , List<Order> orders, int PaymentType );
 
         /// <summary>
         /// 用户登录接口

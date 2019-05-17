@@ -32,8 +32,14 @@ namespace YOY.WCFService
             }
         }
 
-        public Stream BuyTickets(User user, string doneTime, List<Order> orders)
+        public Stream BuyTickets(User user, string doneTime, List<Order> orders, int PaymentType)
         {
+            #region 数据完整性检查
+            if (user == null || string.IsNullOrEmpty(user.PhoneNumber) || string.IsNullOrEmpty(user.UID) || string.IsNullOrEmpty(user.Name))
+                return ResponseHelper.Failure("用户信息不完全！");
+            if (string.IsNullOrEmpty(doneTime)) return ResponseHelper.Failure("缺少完成时间！");
+            if (orders == null || orders.Count == 0) return ResponseHelper.Failure("订单信息不完全！");
+            #endregion
 
             #region 用户不存在则添加
             using (var db = new EFDbContext())
@@ -67,7 +73,7 @@ namespace YOY.WCFService
                     {
                         OrderID = id,
                         OrderTime = DateTime.Now,
-                        OrderState = 0,
+                        OrderState = 1,
                         CommodityID = item.CommodityID,
                         CommodityType = 0,
                         CommodityNum = 1,
@@ -78,9 +84,11 @@ namespace YOY.WCFService
             }
             #endregion
 
-            #region 添加用户映射并生成游客
+            #region 添加用户映射并生成游客与支付信息
             List<User2Order> user2Orders = new List<User2Order>();
             List<Visitor> visitors = new List<Visitor>();
+            List<Payment> payments = new List<Payment>();
+            List<Ticket> tickets = EFHelper.GetAll<Ticket>();
             id = IDHelper.getNextVisitorID(Convert.ToDateTime(doneTime));
             foreach( Order order in ticketOrders)
             {
@@ -98,6 +106,13 @@ namespace YOY.WCFService
                     OrderID = order.OrderID,
                     VisitorID = id
                 });
+                payments.Add(new Payment()
+                {
+                    OrderID = order.OrderID,
+                    PaymentType = PaymentType,
+                    PaymentTime = DateTime.Now,
+                    PaymentAmount = tickets.Where(t => t.TicketID == order.CommodityID).Single().TicketPrice
+                });
 
                 id = IDHelper.get4Next(id);
             }
@@ -113,6 +128,7 @@ namespace YOY.WCFService
                         db.Orders.Add(ticketOrders[i]);
                         db.Visitors.Add(visitors[i]);
                         db.User2Orders.Add(user2Orders[i]);
+                        db.Payments.Add(payments[i]);
                     }
                     db.SaveChanges();
                 }
@@ -127,39 +143,6 @@ namespace YOY.WCFService
             #endregion
 
             return ResponseHelper.Success(ticketOrders.Select( t => t.OrderID).ToList());
-        }
-
-        public Stream Pay(List<Payment> payments)
-        {
-            if (payments == null || payments.Count == 0)
-                return ResponseHelper.Failure("支付列表为空！");
-
-            foreach( Payment payment in payments)
-                payment.PaymentTime = DateTime.Now;
-
-            try
-            {
-                using (var db = new EFDbContext())
-                {
-                    foreach (Payment payment in payments)
-                    {
-                        //同时更改订单状态
-                        var query = db.Orders.Where(t => t.OrderID == payment.OrderID).Single();
-                        query.OrderState = 1;
-                        db.Payments.Add(payment);
-                    }
-                    db.SaveChanges();
-                }
-            }
-            catch(Exception ex)
-            {
-                if (ex.InnerException == null)
-                    return ResponseHelper.Failure(ex.Message);
-                else
-                    return ResponseHelper.Failure(ex.InnerException.Message);
-            }
-
-            return ResponseHelper.Success(null);
         }
 
         public Stream Login(User user)
