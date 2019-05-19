@@ -25,5 +25,6 @@ namespace YOY.DAL
         public DbSet<User2Order> User2Orders { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<Notice> Notices { get; set; }
     }
 }

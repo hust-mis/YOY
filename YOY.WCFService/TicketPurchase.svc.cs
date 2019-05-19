@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
+using YOY.BLL;
 using YOY.DAL;
 using YOY.Model;
-using Newtonsoft.Json;
-using System.IO;
-using YOY.BLL;
 
 namespace YOY.WCFService
 {

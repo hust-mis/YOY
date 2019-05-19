@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Notice.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="Payment.cs" />
     <Compile Include="Response.cs" />
