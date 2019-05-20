@@ -71,6 +71,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Amusement.svc" />
     <Content Include="Recommendation.svc" />
     <Content Include="TicketPurchase.svc" />
     <Content Include="Web.config">
@@ -78,6 +79,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Amusement.svc.cs">
+      <DependentUpon>Amusement.svc</DependentUpon>
+    </Compile>
+    <Compile Include="IAmusement.cs" />
     <Compile Include="IRecommendation.cs" />
     <Compile Include="ITicketPurchase.cs" />
     <Compile Include="Recommendation.svc.cs">

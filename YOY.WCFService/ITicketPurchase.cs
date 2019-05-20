@@ -26,15 +26,13 @@ namespace YOY.WCFService
         Stream GetTickets();
 
         /// <summary>
-        /// 购买门票
+        /// 购票接口
         /// </summary>
-        /// <param name="TicketID">门票ID</param>
-        /// <param name="CommodityNum">门票数量</param>
-        /// <param name="PhoneNumber">手机号码</param>
-        /// <param name="UID">身份证号码</param>
-        /// <param name="Name">姓名</param>
-        /// <param name="DoneTime">消费时间（YYYY-MM-DD）</param>
-        /// <returns>订单编号结果的JSON字符串</returns>
+        /// <param name="user">用户信息</param>
+        /// <param name="DoneTime">消费完成时间</param>
+        /// <param name="orders">订单信息</param>
+        /// <param name="PaymentType">支付方式</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
         RequestFormat = WebMessageFormat.Json,

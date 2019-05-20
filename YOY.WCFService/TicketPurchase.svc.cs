@@ -150,10 +150,10 @@ namespace YOY.WCFService
             {
                 using (var db = new EFDbContext())
                 {
-                    var query = db.Users.Where(t => t.PhoneNumber == user.PhoneNumber).Single();
-                    if (query == null) return ResponseHelper.Failure("用户不存在！");
-                    if (query.UID != user.UID) return ResponseHelper.Failure("身份证号码错误！");
-                    return ResponseHelper.Success(new List<User>() { query });
+                    var query = db.Users.Where(t => t.PhoneNumber == user.PhoneNumber);
+                    if (query.Count() == 0) return ResponseHelper.Failure("用户不存在！");
+                    if (query.Single().UID != user.UID) return ResponseHelper.Failure("身份证号码错误！");
+                    return ResponseHelper.Success(new List<User>() { query.Single() });
                 }
             }
             catch(Exception ex)
@@ -185,11 +185,11 @@ namespace YOY.WCFService
                                 join u2o2v in U2O2V on o.OrderID equals u2o2v.OrderID
                                 select new { u2o2v.OrderID, t.TicketName, u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
 
+                    if (query.Count() == 0) return ResponseHelper.Success(null);
+
                     var result = from q in query.ToList()
                                  select new { q.OrderID, q.TicketName, q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
-
-                    if (query == null) return ResponseHelper.Success(null);
-                    else return ResponseHelper.Success(result.ToList());
+                    return ResponseHelper.Success(result.ToList());
                 }
             }
             catch(Exception ex)
@@ -220,12 +220,11 @@ namespace YOY.WCFService
                                 join t in db.Tickets on o.CommodityID equals t.TicketID
                                 join u2o2v in U2O2V on o.OrderID equals u2o2v.OrderID
                                 select new { u2o2v.OrderID, t.TicketName, u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
+                    if (query.Count() == 0) return ResponseHelper.Success(null);
 
                     var result = from q in query.ToList()
                                  select new { q.OrderID, q.TicketName, q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
-
-                    if (query == null) return ResponseHelper.Success(null);
-                    else return ResponseHelper.Success(result.ToList());
+                    return ResponseHelper.Success(result.ToList());
                 }
             }
             catch (Exception ex)
@@ -246,13 +245,13 @@ namespace YOY.WCFService
             {
                 using (var db = new EFDbContext())
                 {
-                    var order = db.Orders.Where(t => t.OrderID == orderID).Single();
-                    if( order == null ) return ResponseHelper.Failure("该订单不存在！");
+                    var order = db.Orders.Where(t => t.OrderID == orderID);
+                    if( order.Count() == 0) return ResponseHelper.Failure("该订单不存在！");
                     var u2o = db.User2Orders.Where(t => t.OrderID == orderID).Single();
                     var visitor = db.Visitors.Where(t => t.VisitorID == u2o.VisitorID).Single();
 
                     //修改数据库中相关记录
-                    order.OrderState = -1;
+                    order.Single().OrderState = -1;
                     u2o.VisitorID = string.Empty;
                     db.Visitors.Remove(visitor);
                     db.SaveChanges();
