@@ -26,5 +26,6 @@ namespace YOY.DAL
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Visitor> Visitors { get; set; }
         public DbSet<Notice> Notices { get; set; }
+        public DbSet<Group> Groups { get; set; }
     }
 }
