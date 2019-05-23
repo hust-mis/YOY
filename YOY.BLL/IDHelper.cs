@@ -121,5 +121,30 @@ namespace YOY.BLL
             return get4Next(getMaxVisitorID(date));
         }
 
+        /// <summary>
+        /// 获取指定日期的GroupID的最大值
+        /// </summary>
+        /// <param name="date">队伍建立日期</param>
+        /// <returns>当前GroupID的最大值</returns>
+        public static string getMaxGroupID(DateTime date)
+        {
+            var groups = EFHelper.GetAll<Group>();
+            var query = groups.Where(t => t.GroupID.Substring(1, 8) == date.ToString("yyyyMMdd")).Max(t => t.GroupID);
+
+            if (string.IsNullOrEmpty(query))
+                return string.Format("G{0}{1}", date.ToString("yyyyMMdd"), "0000");
+            else return query;
+        }
+
+        /// <summary>
+        /// 获取指定日期的下一位GroupID
+        /// </summary>
+        /// <param name="date">队伍建立日期</param>
+        /// <returns>下一位GroupID</returns>
+        public static string getNextGroupID(DateTime date)
+        {
+            return get4Next(getMaxGroupID(date));
+        }
+
     }
 }

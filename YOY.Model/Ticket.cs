@@ -43,7 +43,7 @@ namespace YOY.Model
         /// </summary>
         [Column("TicketPrice")]
         [DataMember]
-        public int TicketPrice { get; set; }
+        public double TicketPrice { get; set; }
 
         /// <summary>
         /// 门票图片，即图片的URL

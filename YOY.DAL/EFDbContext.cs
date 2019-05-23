@@ -33,5 +33,6 @@ namespace YOY.DAL
         public DbSet<Store> Stores { get; set; }
         public DbSet<Commodity> Commodities { get; set; }
 
+        public DbSet<Group> Groups { get; set; }
     }
 }

@@ -10,39 +10,40 @@ using System.Threading.Tasks;
 namespace YOY.Model
 {
     /// <summary>
-    /// 支付信息实体
+    /// 队伍信息实体
     /// </summary>
-    [Table("Payments")]
+    [Table("Groups")]
     [DataContract]
-    public class Payment
+    public class Group
     {
         /// <summary>
-        /// 订单ID，对应的订单
+        /// 队伍ID
+        /// </summary>
+        [Column("GroupID")]
+        [DataMember]
+        public string GroupID { get; set; }
+
+        /// <summary>
+        /// 游客ID
         /// </summary>
         [Key]
-        [Column("OrderID")]
+        [Column("VisitorID",Order = 1)]
         [DataMember]
-        public string OrderID { get; set; }
+        public string VisitorID { get; set; }
 
         /// <summary>
-        /// 支付金额，单位：RMB
+        /// 游客状态，0：被邀请中，1：在队伍中
         /// </summary>
-        [Column("PaymentAmount")]
+        [Column("InviteeState")]
         [DataMember]
-        public double PaymentAmount { get; set; }
+        public int InviteeState { get; set; }
 
         /// <summary>
-        /// 支付方式，0：支付宝，1：微信，2：银联，3：现金
+        /// 邀请者ID，邀请该游客的游客ID
         /// </summary>
-        [Column("PaymentType")]
+        [Key]
+        [Column("InviterID" , Order = 2)]
         [DataMember]
-        public int PaymentType { get; set; }
-
-        /// <summary>
-        /// 支付时间，YYYY-MM-DD hh:mm:ss
-        /// </summary>
-        [Column("PaymentTime")]
-        [DataMember]
-        public DateTime PaymentTime { get; set; }
+        public string InviterID { get; set; }
     }
 }

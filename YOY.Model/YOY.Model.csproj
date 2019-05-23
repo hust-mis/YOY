@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Commodity.cs" />
     <Compile Include="LocationRecords.cs" />
+    <Compile Include="Group.cs" />
     <Compile Include="Notice.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="Payment.cs" />
