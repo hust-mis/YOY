@@ -183,12 +183,12 @@ namespace YOY.WCFService
                     var query = from o in db.Orders
                                 join t in db.Tickets on o.CommodityID equals t.TicketID
                                 join u2o2v in U2O2V on o.OrderID equals u2o2v.OrderID
-                                select new { u2o2v.OrderID, t.TicketName, u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
+                                select new { u2o2v.OrderID, t.TicketName , t.TicketPrice , u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
 
                     if (query.Count() == 0) return ResponseHelper.Success(null);
 
                     var result = from q in query.ToList()
-                                 select new { q.OrderID, q.TicketName, q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
+                                 select new { q.OrderID, q.TicketName , q.TicketPrice , q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
                     return ResponseHelper.Success(result.ToList());
                 }
             }
@@ -219,11 +219,11 @@ namespace YOY.WCFService
                     var query = from o in db.Orders
                                 join t in db.Tickets on o.CommodityID equals t.TicketID
                                 join u2o2v in U2O2V on o.OrderID equals u2o2v.OrderID
-                                select new { u2o2v.OrderID, t.TicketName, u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
+                                select new { u2o2v.OrderID, t.TicketName , t.TicketPrice , u2o2v.VisitorID, u2o2v.Password, u2o2v.PlayTime };
                     if (query.Count() == 0) return ResponseHelper.Success(null);
 
                     var result = from q in query.ToList()
-                                 select new { q.OrderID, q.TicketName, q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
+                                 select new { q.OrderID, q.TicketName , q.TicketPrice , q.VisitorID, q.Password, PlayTime = q.PlayTime.ToString("yyyy-MM-dd") };
                     return ResponseHelper.Success(result.ToList());
                 }
             }
