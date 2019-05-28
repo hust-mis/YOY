@@ -5,14 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Threading;
-//using Hit.RFID;
+using YOY.BLL;
 using System.IO.Ports;
-//using Hit.Common;
 using ReaderB;
 
 namespace YOY.BLL
 {
-    public class ReaderHandle
+    public class ReaderHandle    //用于定位的辅助方法
     {
         //TODO
 
@@ -58,7 +57,7 @@ namespace YOY.BLL
                 StaticClassReaderB.CloseSpecComPort(FrmHandle);
             }
 
-            //CommonUtils.ActiveAllCom();
+            CommonUtils.ActiveAllCom();
 
             // 打开串口
             int iRet = StaticClassReaderB.AutoOpenComPort(ref Port, ref ComAdr, Baud, ref FrmHandle);

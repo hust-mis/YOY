@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonUtils.cs" />
     <Compile Include="IDHelper.cs" />
     <Compile Include="ReaderHandle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
