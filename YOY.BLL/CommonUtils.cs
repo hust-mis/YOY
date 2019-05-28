@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.IO.Ports;
 
 namespace YOY.BLL
 {
-    class CommonUtils     //用于定位的辅助方法
+    public class CommonUtils
     {
-
         public static void ActiveAllCom()
         {
             try
@@ -294,7 +294,5 @@ namespace YOY.BLL
                 throw new Exception("ASCII Code is not valid.");
             }
         }
-
-
     }
 }

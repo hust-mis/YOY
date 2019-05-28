@@ -588,7 +588,7 @@ namespace YOY.BLL
 
 
         /// <summary>
-        /// 字符转为十六进制字符串
+        /// 字符串转为十六进制字符串
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
