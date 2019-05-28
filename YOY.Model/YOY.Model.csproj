@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Card.cs" />
     <Compile Include="Commodity.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Group.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User2Order.cs" />
     <Compile Include="Visitor.cs" />
+    <Compile Include="Visitor2Card.cs" />
     <Compile Include="Visitor2Order.cs" />
   </ItemGroup>
   <ItemGroup>

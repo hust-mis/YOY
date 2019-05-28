@@ -13,13 +13,13 @@ namespace YOY.DAL
     /// </summary>
     public class EFDbContext : DbContext
     {
-        public EFDbContext(): base("name=Cloud")
+        public EFDbContext() : base("name=Cloud")
         {
             //不检查一致性
             Database.SetInitializer<EFDbContext>(null);
         }
 
-        public DbSet<User> Users { get; set; } 
+        public DbSet<User> Users { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<User2Order> User2Orders { get; set; }
@@ -34,5 +34,7 @@ namespace YOY.DAL
         public DbSet<Locator> Locators { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Visitor2Order> Visitor2Orders { get; set; }
+        public DbSet<Card> Cards { get; set; }
+        public DbSet<Visitor2Card> Visitor2Card { get; set; }
     }
 }
