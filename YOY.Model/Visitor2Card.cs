@@ -36,7 +36,7 @@ namespace YOY.Model
         /// </summary>
         [Column("Balance")]
         [DataMember]
-        public int Balance { get; set; }
+        public float Balance { get; set; }
 
         /// <summary>
         /// 绑卡时间

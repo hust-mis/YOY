@@ -16,7 +16,7 @@ namespace YOY.WCFService
     public interface ICardManagement
     {
         /// <summary>
-        /// 测试接口
+        /// 获取游客id接口
         /// </summary>
         /// <returns>卡绑定的用户id</returns>
         [OperationContract]
@@ -25,6 +25,21 @@ namespace YOY.WCFService
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "GetCardUser")]
-        string GetCardUser();
+        Stream GetCardUser();
+
+        /// <summary>
+        /// 写入游客id接口
+        /// </summary>
+        /// <returns>卡绑定的用户id</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "BindVisitor")]
+        Stream BindVisitor();
+
+
+
     }
 }
