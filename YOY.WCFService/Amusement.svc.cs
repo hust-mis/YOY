@@ -15,6 +15,8 @@ namespace YOY.WCFService
 {
     public class Amusement : IAmusement
     {
+
+        #region 基本功能
         public Stream Login(Visitor visitor)
         {
             if (visitor == null || string.IsNullOrEmpty(visitor.VisitorID) || string.IsNullOrEmpty(visitor.Password))
@@ -77,7 +79,9 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure(ex.InnerException.Message);
             }
         }
+        #endregion
 
+        #region 队伍管理
         public Stream GetApplication(string VisitorID)
         {
             if (string.IsNullOrEmpty(VisitorID)) return ResponseHelper.Failure("游客ID不能为空！");
@@ -304,6 +308,52 @@ namespace YOY.WCFService
             }
         }
 
+        public Stream GroupLocation(string GroupID)
+        {
+            if (string.IsNullOrEmpty(GroupID))
+                return ResponseHelper.Failure("队伍ID不能为空！");
+
+            try
+            {
+                var visitors = EFHelper.GetAll<Visitor>().ToList();
+                var groups = EFHelper.GetAll<Group>().ToList();
+                var locators = EFHelper.GetAll<Locator>().ToList();
+                var team = from g in groups
+                           where g.GroupID == GroupID && g.InviteeState == 1
+                           join v in visitors on g.VisitorID equals v.VisitorID
+                           join l in locators on v.VisitorID equals l.VisitorID
+                           where l.LocatorState == 1
+                           select new { v.VisitorID, v.Name, l.LocatorID };
+
+                if (team.Count() == 0) return ResponseHelper.Failure("该队伍没有定位信息！");
+
+                var localsense = new LocalSense();
+                localsense.Run();
+                Thread.Sleep(500);
+                localsense.Stop();
+
+                var location = new List<Location>();
+                foreach( var t in team )
+                    location.Add(localsense.locations.Where(q => q.ID == t.LocatorID).OrderByDescending(t => t.Timestamp).FirstOrDefault());
+
+                var query = from t in team
+                            join l in location on t.LocatorID equals l.ID
+                            select new { t.VisitorID, t.Name, l.X, l.Y };
+
+                if (query.Count() == 0) return ResponseHelper.Failure("没有查询到位置信息！");
+                else return ResponseHelper.Success(query);
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
+        }
+        #endregion
+
+        #region 订单查询
         public Stream AvailCommodity(string VisitorID)
         {
             if (string.IsNullOrEmpty(VisitorID))
@@ -319,7 +369,7 @@ namespace YOY.WCFService
 
                 var query = from v2o in v2os
                             join o in orders on v2o.OrderID equals o.OrderID
-                            where o.OrderState == 0 && o.CommodityType == 2
+                            where o.OrderState == 0 && o.DoneTime != null
                             join c in commodies on o.CommodityID equals c.CommodityID
                             select new
                             {
@@ -358,7 +408,7 @@ namespace YOY.WCFService
 
                 var query = from v2o in v2os
                             join o in orders on v2o.OrderID equals o.OrderID
-                            where o.OrderState == 1 && o.CommodityType == 2
+                            where o.OrderState == 1 && o.DoneTime == null
                             join c in commodies on o.CommodityID equals c.CommodityID
                             select new
                             {
@@ -393,5 +443,7 @@ namespace YOY.WCFService
 
             throw new NotImplementedException();
         }
+        #endregion
+
     }
 }

@@ -16,6 +16,7 @@ namespace YOY.WCFService
     [ServiceContract]
     public interface IAmusement
     {
+        #region 基本功能
         /// <summary>
         /// 游园子系统登录接口
         /// </summary>
@@ -41,7 +42,9 @@ namespace YOY.WCFService
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "GetNotice")]
         Stream GetNotice(string LastGetTime);
+        #endregion
 
+        #region 队伍管理
         /// <summary>
         /// 获取组队申请信息
         /// </summary>
@@ -149,6 +152,17 @@ namespace YOY.WCFService
         UriTemplate = "Group/GetLocation/{VisitorID}")]
         Stream GetLocation(string VisitorID);
 
+        
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Group/GroupLocation/{GroupID}")]
+        Stream GroupLocation(string GroupID);
+        #endregion
+
+        #region 订单管理
         /// <summary>
         /// 未取货订单查询
         /// </summary>
@@ -187,5 +201,6 @@ namespace YOY.WCFService
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "Order/ReturnCommodity")]
         Stream ReturnCommodity(Order order);
+        #endregion
     }
 }
