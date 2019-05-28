@@ -35,6 +35,6 @@ namespace YOY.DAL
         public DbSet<Group> Groups { get; set; }
         public DbSet<Visitor2Order> Visitor2Orders { get; set; }
         public DbSet<Card> Cards { get; set; }
-        public DbSet<Visitor2Card> Visitor2Card { get; set; }
+        public DbSet<Visitor2Card> Visitor2Cards { get; set; }
     }
 }
