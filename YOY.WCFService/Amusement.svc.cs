@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
 using System.Threading;
 using YOY.BLL;
 using YOY.DAL;
@@ -287,8 +283,8 @@ namespace YOY.WCFService
 
                 var localsense = new LocalSense();
                 localsense.Run();
-                Thread.Sleep(200);
-                localsense.Stop();
+                Thread.Sleep(100);
+                new Thread(() => { localsense.Stop(); }).Start();
 
                 var locator = locators.Single();
                 var query = localsense.locations

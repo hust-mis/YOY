@@ -40,7 +40,6 @@ namespace YOY.BLL
             if (socket != null) socket.Close();
         }
 
-
         private string[] copyStrArWithLen(string[] preStr, int start)
         {
             string[] retunAr = new string[CpLen];
