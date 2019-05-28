@@ -29,10 +29,10 @@ namespace YOY.DAL
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProRecord> ProjectRecord { get; set; }
         public DbSet<Operation> ProjectOperation { get; set; }
-        public DbSet<LocationRecords> LocationRecord { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<Commodity> Commodities { get; set; }
-
+        public DbSet<Locator> Locators { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Visitor2Order> Visitor2Orders { get; set; }
     }
 }

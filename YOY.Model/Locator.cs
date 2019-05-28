@@ -9,50 +9,40 @@ using System.Threading.Tasks;
 
 namespace YOY.Model
 {
-
     /// <summary>
-    /// 位置信息记录实体类
+    /// 定位器信息实体类
     /// </summary>
-    [Table("LocationRecord")]
+    [Table("Locators")]
     [DataContract]
-    public class LocationRecords
+    public class Locator
     {
         /// <summary>
         /// 定位器ID
         /// </summary>
         [Key]
-        [Column("LocatorID", Order = 1 )]
+        [Column("LocatorID")]
         [DataMember]
         public string LocatorID { get; set; }
 
         /// <summary>
-        /// 游客ID
+        /// 定位器状态：0：未使用；1：使用
+        /// </summary>
+        [Column("LocatorState")]
+        [DataMember]
+        public int LocatorState { get; set; }
+
+        /// <summary>
+        /// 定位器说明
+        /// </summary>
+        [Column("LocatorInfo")]
+        [DataMember]
+        public string LocatorInfo { get; set; }
+
+        /// <summary>
+        /// 与定位器绑定的游客
         /// </summary>
         [Column("VisitorID")]
         [DataMember]
         public string VisitorID { get; set; }
-
-        /// <summary>
-        /// 时间 YYYY-MM-DD hh:mm:ss
-        /// </summary>
-        [Key]
-        [Column("LocationTime", Order = 2)]
-        [DataMember]
-        public DateTime LocationTime{ get; set; }
-
-        /// <summary>
-        /// X坐标
-        /// </summary>
-        [Column("XLocation")]
-        [DataMember]
-        public int XLocation { get; set; }
-
-        /// <summary>
-        /// Y坐标
-        /// </summary>
-        [Column("YLocation")]
-        [DataMember]
-        public int YLocation { get; set; }
-
     }
 }

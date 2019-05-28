@@ -35,26 +35,26 @@ namespace YOY.WCFService
         /// <param name="RecomType">推荐项目依据1：距离；2：等待时间</param>
         /// <param name="VisitorID">游客ID</param>
         /// <returns>查询结果的JSON字符串</returns>
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-        RequestFormat = WebMessageFormat.Json,
-        ResponseFormat = WebMessageFormat.Json,
-        BodyStyle = WebMessageBodyStyle.WrappedRequest,
-        UriTemplate = "ProjectRecom")]
-        Stream ProjectRecom(int RecomType , string VisitorID);
+        //[OperationContract]
+        //[WebInvoke(Method = "POST",
+        //RequestFormat = WebMessageFormat.Json,
+        //ResponseFormat = WebMessageFormat.Json,
+        //BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        //UriTemplate = "ProjectRecom")]
+        //Stream ProjectRecom(int RecomType , string VisitorID);
 
         /// <summary>
         /// 获取店铺信息接口
         /// </summary>
         /// <param name="VisitorID">游客ID</param>
         /// <returns>查询结果的JSON字符串</returns>
-        [OperationContract]
-        [WebInvoke(Method = "GET",
-        RequestFormat = WebMessageFormat.Json,
-        ResponseFormat = WebMessageFormat.Json,
-        BodyStyle = WebMessageBodyStyle.WrappedRequest,
-        UriTemplate = "GetStoreInfo/{VisitorID}")]
-        Stream GetStoreInfo(string VisitorID);
+        //[OperationContract]
+        //[WebInvoke(Method = "GET",
+        //RequestFormat = WebMessageFormat.Json,
+        //ResponseFormat = WebMessageFormat.Json,
+        //BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        //UriTemplate = "GetStoreInfo/{VisitorID}")]
+        //Stream GetStoreInfo(string VisitorID);
 
         /// <summary>
         /// 获取商品菜单接口

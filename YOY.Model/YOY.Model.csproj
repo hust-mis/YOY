@@ -52,8 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commodity.cs" />
-    <Compile Include="LocationRecords.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="Group.cs" />
+    <Compile Include="Locator.cs" />
     <Compile Include="Notice.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="Payment.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User2Order.cs" />
     <Compile Include="Visitor.cs" />
+    <Compile Include="Visitor2Order.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
