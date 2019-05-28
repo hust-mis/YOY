@@ -334,7 +334,7 @@ namespace YOY.WCFService
 
                 var location = new List<Location>();
                 foreach( var t in team )
-                    location.Add(localsense.locations.Where(q => q.ID == t.LocatorID).OrderByDescending(t => t.Timestamp).FirstOrDefault());
+                    location.Add(localsense.locations.Where(q => q.ID == t.LocatorID).OrderByDescending(q => q.Timestamp).FirstOrDefault());
 
                 var query = from t in team
                             join l in location on t.LocatorID equals l.ID
