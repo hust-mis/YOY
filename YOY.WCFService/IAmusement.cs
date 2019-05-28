@@ -16,6 +16,7 @@ namespace YOY.WCFService
     [ServiceContract]
     public interface IAmusement
     {
+        #region 基本功能
         /// <summary>
         /// 游园子系统登录接口
         /// </summary>
@@ -41,7 +42,9 @@ namespace YOY.WCFService
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "GetNotice")]
         Stream GetNotice(string LastGetTime);
+        #endregion
 
+        #region 队伍管理
         /// <summary>
         /// 获取组队申请信息
         /// </summary>
@@ -121,7 +124,83 @@ namespace YOY.WCFService
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "Group/Exit/{VisitorID}")]
-        Stream VisitorID(string VisitorID);
+        Stream Exit(string VisitorID);
 
+        /// <summary>
+        /// 获取队员信息
+        /// </summary>
+        /// <param name="VisitorID">游客ID</param>
+        /// <returns>队员详细信息JSON字符串</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Group/TeamerInfo/{VisitorID}")]
+        Stream GetTeamerInfo(string VisitorID);
+
+        /// <summary>
+        /// 获取队员位置
+        /// </summary>
+        /// <param name="VisitorID">游客ID</param>
+        /// <returns>队员位置信息JSON字符串</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Group/GetLocation/{VisitorID}")]
+        Stream GetLocation(string VisitorID);
+
+        
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Group/GroupLocation/{GroupID}")]
+        Stream GroupLocation(string GroupID);
+        #endregion
+
+        #region 订单管理
+        /// <summary>
+        /// 未取货订单查询
+        /// </summary>
+        /// <param name="VisitorID">游客ID</param>
+        /// <returns>未取货订单信息</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Order/AvailCommodity/{VisitorID}")]
+        Stream AvailCommodity(string VisitorID);
+
+        /// <summary>
+        /// 已取货订单查询
+        /// </summary>
+        /// <param name="VisitorID">VisitorID</param>
+        /// <returns>已取货订单信息</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Order/UnavailCommodity/{VisitorID}")]
+        Stream UnavailCommodity(string VisitorID);
+
+        /// <summary>
+        /// 退货
+        /// </summary>
+        /// <param name="order">要进行退货的商品信息</param>
+        /// <returns>退货结果信息</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Order/ReturnCommodity")]
+        Stream ReturnCommodity(Order order);
+        #endregion
     }
 }
