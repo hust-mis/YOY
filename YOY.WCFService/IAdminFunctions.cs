@@ -17,7 +17,41 @@ namespace YOY.WCFService
     [ServiceContract]
     public interface IAdminFunctions
     {
+        /// <summary>
+        /// 获取所有给定日期的通知信息
+        /// </summary>
+        /// <returns>查询结果的JSON字符串</returns>
         [OperationContract]
-        void DoWork();
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "GetAllNotice")]
+        Stream GetAllNotice(DateTime[] Date);
+
+        /// <summary>
+        /// 审核通过申请
+        /// </summary>
+        /// <returns>查询结果的JSON字符串</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "PassNotice")]
+        Stream PassNotice(string NoticeID);
+
+        /// <summary>
+        /// 审核拒绝申请
+        /// </summary>
+        /// <returns>查询结果的JSON字符串</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "RefuseNotice")]
+        Stream RefuseNotice(string NoticeID , string Remarks);
+
     }
 }
