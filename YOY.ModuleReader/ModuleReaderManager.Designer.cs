@@ -92,7 +92,7 @@
             // TimerUpdate
             // 
             this.TimerUpdate.Enabled = true;
-            this.TimerUpdate.Interval = 5000;
+            this.TimerUpdate.Interval = 2500;
             this.TimerUpdate.Tick += new System.EventHandler(this.TimerUpdate_Tick);
             // 
             // BtnExitDisconnect
@@ -155,6 +155,7 @@
             this.BtnProjectDisconnect.TabIndex = 2;
             this.BtnProjectDisconnect.Text = "断开";
             this.BtnProjectDisconnect.UseVisualStyleBackColor = true;
+            this.BtnProjectDisconnect.Click += new System.EventHandler(this.BtnProjectDisconnect_Click);
             // 
             // LblProject
             // 
@@ -193,7 +194,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "ModuleReaderManager";
-            this.Text = "游无忧游乐园RFID读写管理";
+            this.Text = "热气球RFID读写管理";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);

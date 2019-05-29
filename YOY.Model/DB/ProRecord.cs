@@ -33,11 +33,23 @@ namespace YOY.Model.DB
         public string VisitorID { get; set; }
 
         /// <summary>
-        /// 游玩状态 （0：等待  1：游玩）
+        /// 游玩状态
+        /// 0：等待
+        /// 1：游玩
+        /// 2：退出
         /// </summary>
-        [Column("PlayState")]
+        [Key]
+        [Column("PlayState",Order = 3)]
         [DataMember]
         public int PlayState { get; set; }
 
+        /// <summary>
+        /// 时间戳
+        /// 游玩状态改变的发生时间节点
+        /// YYYY-MM-DD hh:mm:ss
+        /// </summary>
+        [Column("Timestamp")]
+        [DataMember]
+        public DateTime Timestamp { get; set; }
     }
 }
