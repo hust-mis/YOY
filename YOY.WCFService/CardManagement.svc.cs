@@ -256,7 +256,7 @@ namespace YOY.WCFService
                     var result = from r in record
                                  join o in db.Orders on r.OrderID equals o.OrderID
                                  where o.CommodityType == 3  //卡相关
-                                 select new { o.OrderID , o.OrderState , r.PaymentAmount , r.PaymentType , r.PaymentTime }
+                                 select new { o.OrderID, o.OrderState, r.PaymentAmount, r.PaymentType, r.PaymentTime };
 
                     return ResponseHelper.Success(result.ToList());//返回OrderID
                 }
