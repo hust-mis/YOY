@@ -72,7 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Amusement.svc" />
+    <Content Include="CardManagement.svc" />
     <Content Include="CardReaderManagement.svc" />
+    <Content Include="NoticeManagement.svc" />
     <Content Include="Recommendation.svc" />
     <Content Include="TicketPurchase.svc" />
     <Content Include="Web.config">
@@ -83,13 +85,21 @@
     <Compile Include="Amusement.svc.cs">
       <DependentUpon>Amusement.svc</DependentUpon>
     </Compile>
+    <Compile Include="CardManagement.svc.cs">
+      <DependentUpon>CardManagement.svc</DependentUpon>
+    </Compile>
     <Compile Include="CardReaderManagement.svc.cs">
       <DependentUpon>CardReaderManagement.svc</DependentUpon>
     </Compile>
     <Compile Include="IAmusement.cs" />
+    <Compile Include="ICardManagement.cs" />
     <Compile Include="ICardReaderManagement.cs" />
+    <Compile Include="INoticeManagement.cs" />
     <Compile Include="IRecommendation.cs" />
     <Compile Include="ITicketPurchase.cs" />
+    <Compile Include="NoticeManagement.svc.cs">
+      <DependentUpon>NoticeManagement.svc</DependentUpon>
+    </Compile>
     <Compile Include="Recommendation.svc.cs">
       <DependentUpon>Recommendation.svc</DependentUpon>
     </Compile>
