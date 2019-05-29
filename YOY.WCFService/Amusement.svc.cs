@@ -54,16 +54,16 @@ namespace YOY.WCFService
                 if( string.IsNullOrEmpty(LastGetTime) )
                 {
                     var query = notices.OrderByDescending(t => t.NoticeTime)
-                                        .Where(t => t.NoticeTime >= DateTime.Today)
-                                        .Select(t => new { t.NoticeID , t.NoticeTitle , NoticeTime = t.NoticeTime.ToString("yyyy-MM-dd HH:mm:ss") , t.ContentTime , t.NoticeAddress , t.NoticeInfo})
+                                        .Where(t => t.NoticeStatus == 1)
+                                        .Select(t => new { t.NoticeID , t.NoticeType ,t.OccurTime , t.OccurAddress , t.NoticeDetail, CheckTime = t.CheckTime.ToString("yyyy-MM-dd HH:mm:ss") })
                                         .ToList();
                     return ResponseHelper.Success(query);
                 }
                 else
                 {
-                    var query = notices.Where(t => t.NoticeTime > Convert.ToDateTime(LastGetTime))
+                    var query = notices.Where(t => t.NoticeTime > Convert.ToDateTime(LastGetTime) && t.NoticeStatus == 1)
                                        .OrderByDescending(t => t.NoticeTime)
-                                       .Select(t => new { t.NoticeID, t.NoticeTitle, NoticeTime = t.NoticeTime.ToString("yyyy-MM-dd HH:mm:ss"), t.ContentTime, t.NoticeAddress, t.NoticeInfo })
+                                       .Select(t => new { t.NoticeID, t.NoticeType, t.OccurTime, t.OccurAddress, t.NoticeDetail, CheckTime = t.CheckTime.ToString("yyyy-MM-dd HH:mm:ss") })
                                        .ToList();
                     return ResponseHelper.Success(query);
                 }
@@ -327,7 +327,7 @@ namespace YOY.WCFService
                 var localsense = new LocalSense();
                 localsense.Run();
                 Thread.Sleep(500);
-                localsense.Stop();
+                new Thread(() => { localsense.Stop(); }).Start();
 
                 var location = new List<Location>();
                 foreach( var t in team )
