@@ -82,5 +82,19 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\YOY.BLL\YOY.BLL.csproj">
+      <Project>{cfca42c8-582e-4253-9fca-7a595aedc8d0}</Project>
+      <Name>YOY.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YOY.DAL\YOY.DAL.csproj">
+      <Project>{e92c25c9-ddf3-4fd0-85b6-b30172c1bea8}</Project>
+      <Name>YOY.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\YOY.Model\YOY.Model.csproj">
+      <Project>{9b46127b-13bf-40c1-90fd-a3010533cc02}</Project>
+      <Name>YOY.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
