@@ -11,8 +11,11 @@ using YOY.Model.DB;
 
 namespace YOY.WCFService
 {
-	
-	public class CardManagement : ICardManagement
+	/// <summary>
+    /// 桌面式读卡器连接与RFID读写操作接口的实现
+    /// 
+    /// </summary>
+	public class CardReaderManagement : ICardReaderManagement
 	{
 
         /// <summary>

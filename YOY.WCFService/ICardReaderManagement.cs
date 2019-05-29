@@ -13,7 +13,7 @@ namespace YOY.WCFService
     /// 游园子系统卡管理接口声明
     /// </summary>
     [ServiceContract]
-    public interface ICardManagement
+    public interface ICardReaderManagement
     {
         /// <summary>
         /// 获取游客id接口
