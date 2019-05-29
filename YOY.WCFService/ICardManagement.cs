@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using YOY.Model.DB;
@@ -10,35 +8,58 @@ using YOY.Model.DB;
 namespace YOY.WCFService
 {
     /// <summary>
-    /// 游园子系统卡管理接口声明
+    /// 卡管理接口声明
     /// </summary>
     [ServiceContract]
     public interface ICardManagement
     {
         /// <summary>
-        /// 获取游客id接口
+        /// 卡充值
         /// </summary>
-        /// <returns>卡绑定的用户id</returns>
-        [OperationContract]
-        [WebInvoke(Method = "GET",
-        RequestFormat = WebMessageFormat.Json,
-        ResponseFormat = WebMessageFormat.Json,
-        BodyStyle = WebMessageBodyStyle.WrappedRequest,
-        UriTemplate = "GetCardUser")]
-        Stream GetCardUser();
-
-        /// <summary>
-        /// 写入游客id接口
-        /// </summary>
-        /// <returns>卡绑定的用户id</returns>
         [OperationContract]
         [WebInvoke(Method = "POST",
         RequestFormat = WebMessageFormat.Json,
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
-        UriTemplate = "BindVisitor")]
-        Stream BindVisitor();
+        UriTemplate = "Recharge")]
+        Stream Recharge(string VisitorID, float Amount, int PaymentType);
 
+        /// <summary>
+        /// 卡退款
+        /// </summary>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Refund")]
+        Stream Refund(string VisitorID, float Amount, int PaymentType);
+
+        /// <summary>
+        /// 查询卡余额
+        /// </summary>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "GetBalance")]
+        Stream GetBalance(string VisitorID);
+
+        
+        /// <summary>
+        /// 获取卡充值、退款记录
+        /// </summary>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "CardRecord")]
+        Stream CardRecord(string VisitorID);
+
+
+        
 
 
     }
