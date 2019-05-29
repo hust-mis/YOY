@@ -10,7 +10,7 @@ using YOY.Model.DB;
 namespace YOY.WCFService
 {
     /// <summary>
-    /// 游园子系统卡管理接口声明
+    /// 桌面式读卡器卡管理接口声明
     /// </summary>
     [ServiceContract]
     public interface ICardReaderManagement

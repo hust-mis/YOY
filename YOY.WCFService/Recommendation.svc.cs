@@ -209,26 +209,43 @@ namespace YOY.WCFService
             if (orders == null || orders.Count == 0) return ResponseHelper.Failure("订单信息不完全！");
             #endregion
 
-            #region 新增订单数据
+            #region 新增订单与支付信息并提交数据库
             string id = IDHelper.getNextOrderID(DateTime.Now, 0);
             List<Order> GoodsOrders = new List<Order>();
-
-            foreach (Order item in orders)
+            List<Payment> GoodsPays = new List<Payment>();
+            List<Commodity> commodities = EFHelper.GetAll<Commodity>();
+            foreach (Order order in orders)
             {
-                for (int i = 1; i <= item.CommodityNum; i++)
+                for (int i = 1; i <= order.CommodityNum; i++)
                 {
                     GoodsOrders.Add(new Order()
                     {
                         OrderID = id,
                         OrderTime = DateTime.Now,
                         OrderState = 1,
-                        CommodityID = item.CommodityID,
+                        CommodityID = order.CommodityID,
                         CommodityType = 2,
-                        CommodityNum = item.CommodityNum,
+                        CommodityNum = order.CommodityNum,
                         DoneTime = Convert.ToDateTime(DateTime.Now.ToString())
                     });
+
+                    GoodsPays.Add(new Payment()
+                    {
+                        OrderID = order.OrderID,
+                        PaymentType = PaymentType,
+                        PaymentTime = DateTime.Now,
+                        PaymentAmount = commodities.Where(c => c.CommodityID == order.CommodityID).Single().CommodityPrice
+                    });
+                    
                     id = IDHelper.get4Next(id);
                 }
+            }
+
+            //订单与支付信息提交数据库
+            for (int i = 0; i < GoodsOrders.Count; i++)
+            {
+                EFHelper.Add<Order>(GoodsOrders[i]);
+                EFHelper.Add<Payment>(GoodsPays[i]);
             }
             #endregion
 
@@ -242,6 +259,8 @@ namespace YOY.WCFService
 
             try
             {
+                
+                //数据库余额修改
                 using (var db = new EFDbContext())
                 {
 
@@ -252,32 +271,11 @@ namespace YOY.WCFService
                     if (left.Single() < sum)
                         return ResponseHelper.Failure("余额不足！");
 
-                    List<Visitor2Card> v2o = new List<Visitor2Card>();
-                    Visitor2Card new_v2o = v2o.Where(v => v.VisitorID == VisitorID).Single();
-                    new_v2o.Balance = new_v2o.Balance - sum;
-                    EFHelper.Update(new_v2o);
-                    return ResponseHelper.Success("扣款成功！");
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException == null)
-                    return ResponseHelper.Failure(ex.Message);
-                else
-                    return ResponseHelper.Failure(ex.InnerException.Message);
-            }
-
-
-            #endregion
-
-
-
-            #region 提交数据库
-            try
-            {
-                for (int i = 0; i < GoodsOrders.Count; i++)
-                {
-                    EFHelper.Add<Order>(GoodsOrders[i]);
+                    List<Visitor2Card> ALLv2c = EFHelper.GetAll<Visitor2Card>();
+                    Visitor2Card new_v2c = ALLv2c.Where(v => v.VisitorID == VisitorID).Single();
+                    new_v2c.Balance = new_v2c.Balance - sum;
+                    EFHelper.Update(new_v2c);
+                    return ResponseHelper.Success(GoodsOrders.Select(t => t.OrderID).ToList());//返回OrderID
                 }
             }
             catch (Exception ex)
@@ -288,7 +286,9 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure(ex.InnerException.Message);
             }
             #endregion
-            return ResponseHelper.Success(GoodsOrders.Select(t => t.OrderID).ToList());
+
+
+            
         }
 
         //public LocationRecords GetVisitorLocation(string VisitorID)//生成新位置记录并保存到数据库
