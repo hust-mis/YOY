@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
+using YOY.BLL;
+using YOY.DAL;
+using YOY.Model.DB;
 
 namespace YOY.WCFService
 {
@@ -12,9 +13,31 @@ namespace YOY.WCFService
     /// </summary>
     public class NoticeManagement : INoticeManagement
     {
-        public void DoWork()
+        /// <summary>
+        /// 发布通知接口
+        /// </summary>
+        /// <param name="VisitorID"></param>
+        /// <param name="NoticeType"></param>
+        /// <param name="OccurTime"></param>
+        /// <param name="OccurAddress"></param>
+        /// <param name="NoticeDetail"></param>
+        /// <returns></returns>
+        public Stream PublishNotice(string VisitorID, int NoticeType, DateTime OccurTime, string OccurAddress, string NoticeDetail)
+        {
+
+
+
+        }
+
+        public Stream GetMyNotice(string VisitorID)
         {
 
         }
+
+        public Stream DelMyNotice(string VisitorID, string NoticeID)
+        {
+
+        }
+
     }
 }

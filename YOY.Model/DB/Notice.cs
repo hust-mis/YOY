@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace YOY.Model.DB
 {
     /// <summary>
-    /// 游园信息表
+    /// 游园通知信息表
     /// </summary>
     [Table("Notice")]
     [DataContract]
@@ -24,12 +24,20 @@ namespace YOY.Model.DB
         [DataMember]
         public string NoticeID { get; set; }
 
+
         /// <summary>
-        /// 通知标题
+        /// 游客ID
         /// </summary>
-        [Column("NoticeTitle")]
+        [Column("VisitorID")]
         [DataMember]
-        public string NoticeTitle { get; set; }
+        public string VisitorID { get; set; }
+
+        /// <summary>
+        /// 通知类型  0:寻人 1：寻物 2：活动 3：提醒
+        /// </summary>
+        [Column("NoticeType")]
+        [DataMember]
+        public int NoticeType { get; set; }
 
         /// <summary>
         /// 发布时间,YYYY-MM-DD Hh:mm:ss
@@ -39,24 +47,46 @@ namespace YOY.Model.DB
         public DateTime NoticeTime { get; set; }
 
         /// <summary>
-        /// 内容时间，hh:mm:ss-hh:mm:ss
+        /// 事件发生时间
         /// </summary>
-        [Column("ContentTime")]
+        [Column("OccurTime")]
         [DataMember]
-        public string ContentTime { get; set; }
+        public DateTime ContentTime { get; set; }
 
         /// <summary>
-        /// 通知地点
+        /// 事件发生地点
         /// </summary>
-        [Column("NoticeAddress")]
+        [Column("OccurAddress")]
         [DataMember]
-        public string NoticeAddress { get; set; }
+        public string OccurAddress { get; set; }
 
         /// <summary>
-        /// 通知内容
+        /// 事件详细描述
         /// </summary>
-        [Column("NoticeInfo")]
+        [Column("NoticeDetails")]
         [DataMember]
-        public string NoticeInfo { get; set; }
+        public string NoticeDetails { get; set; }
+
+        /// <summary>
+        /// 通知状态  0:未审核 1：审核通过 2：审核拒绝 3：已失效
+        /// </summary>
+        [Column("NoticeStatus")]
+        [DataMember]
+        public int NoticeStatus { get; set; }
+
+        /// <summary>
+        /// 审核备注
+        /// </summary>
+        [Column("Remarks")]
+        [DataMember]
+        public string Remarks { get; set; }
+
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        [Column("CheckTime")]
+        [DataMember]
+        public DateTime CheckTime { get; set; }
+
     }
 }
