@@ -218,10 +218,33 @@ namespace YOY.ModuleReader
                               join u in updateItems on v.CardID equals u.CardID
                               select new { v.VisitorID, u.Time };
 
+                    if (v2c.Count() > 0 )
+                    {
+                        using (var db = new EFDbContext())
+                        {
+                            foreach (var v in v2c)
+                            {
+                                db.ProjectOperation.Add(new Operation()
+                                {
+                                    ProjectID = ProjectID,
+                                    VisitorID = v.VisitorID,
+                                    PlayState = 0
+                                });
+                                db.ProjectRecord.Add(new ProRecord()
+                                {
+                                    ProjectID = ProjectID,
+                                    VisitorID = v.VisitorID,
+                                    Timestamp = v.Time,
+                                    PlayState = 0
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+
                 }
                 catch(Exception ex)
                 {
-
                 }
 
 
@@ -229,11 +252,43 @@ namespace YOY.ModuleReader
 
             if (isExitInventory)
             {
-                var updateItems = (from exit in exitTemp
-                                   group exit by exit.EPCString into up
-                                   select new { VisitorID = "V" + up.Key.Substring(0, 12), Time = up.Max(t => t.Time) }).ToList();
-                //TODO
-                exitTemp.Clear();
+                try
+                {
+                    var updateItems = from exit in exitTemp
+                                      group exit by exit.EPCString into up
+                                      select new { CardID = up.Key, Time = up.Max(t => t.Time) };
+                    enterTemp.Clear();
+
+                    var v2c = from v in EFHelper.GetAll<Visitor2Card>()
+                              join u in updateItems on v.CardID equals u.CardID
+                              select new { v.VisitorID, u.Time };
+
+                    if (v2c.Count() > 0)
+                    {
+                        using (var db = new EFDbContext())
+                        {
+                            foreach (var v in v2c)
+                            {
+                                var operation = db.ProjectOperation.First(t => t.ProjectID == ProjectID && t.VisitorID == v.VisitorID);
+                                if (operation != null) db.ProjectOperation.Remove(operation);
+                                db.ProjectRecord.Add(new ProRecord()
+                                {
+                                    ProjectID = ProjectID,
+                                    VisitorID = v.VisitorID,
+                                    Timestamp = v.Time,
+                                    PlayState = 2
+                                });
+                            }
+
+                            db.SaveChanges();
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                }
+
             }
         }
 
@@ -336,11 +391,59 @@ namespace YOY.ModuleReader
         {
             if (isProjectInventory)
             {
-                var updateItems = (from project in projectTemp
-                                   group project by project.EPCString into up
-                                   select new { VisitorID = "V" + up.Key.Substring(0, 12), Time = up.Max(t => t.Time) }).ToList();
-                //TODO
-                projectTemp.Clear();
+                try
+                {
+                    var updateItems = from project in projectTemp
+                                      group project by project.EPCString into up
+                                      select new { CardID = up.Key, Time = up.Max(t => t.Time) };
+                    projectTemp.Clear();
+
+                    var v2c = from v in EFHelper.GetAll<Visitor2Card>()
+                              join u in updateItems on v.CardID equals u.CardID
+                              select new { v.VisitorID, u.Time };
+
+                    if (v2c.Count() > 0)
+                    {
+                        using (var db = new EFDbContext())
+                        {
+                            foreach (var v in v2c)
+                            {
+                                var operation = db.ProjectOperation.First(t => t.ProjectID == ProjectID && t.VisitorID == v.VisitorID);
+                                if (operation != null) operation.PlayState = 1;
+                                db.ProjectRecord.Add(new ProRecord()
+                                {
+                                    ProjectID = ProjectID,
+                                    VisitorID = v.VisitorID,
+                                    Timestamp = v.Time,
+                                    PlayState = 1
+                                });
+                            }
+
+                            db.SaveChanges();
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+        }
+
+        private void BtnProjectDisconnect_Click(object sender, EventArgs e)
+        {
+            isProjectInventory = false;
+            if (isProjectConnected && projectModulerdr != null)
+            {
+                isProjectConnected = false;
+                projectModulerdr.Disconnect();
+                projectModulerdr = null;
+                this.BtnProjectDisconnect.Enabled = false;
+                this.BtnProjectConnect.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("没有处于连接状态！");
             }
         }
     }
