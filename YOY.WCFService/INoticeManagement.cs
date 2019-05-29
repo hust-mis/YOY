@@ -22,7 +22,7 @@ namespace YOY.WCFService
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "PublishNotice")]
-        Stream PublishNotice(string VisitorID , int NoticeType , DateTime OccurTime , string OccurAddress , string NoticeDetail);
+        Stream PublishNotice(string VisitorID , int NoticeType , string OccurTime , string OccurAddress , string NoticeDetail);
         
         /// <summary>
         /// 查看我发布的通知接口
@@ -36,7 +36,7 @@ namespace YOY.WCFService
         Stream GetMyNotice(string VisitorID);
 
         /// <summary>
-        /// 游客删除已发布的通知接口
+        /// 删除已发布的通知接口
         /// </summary>
         /// <param name="user">用户信息</param>
         /// <returns>登录结果的JSON</returns>

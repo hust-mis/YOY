@@ -146,5 +146,32 @@ namespace YOY.BLL
             return get4Next(getMaxGroupID(date));
         }
 
+        /// <summary>
+        /// 获取指定日期的NoticeID的最大值
+        /// </summary>
+        /// <param name="date">发布通知日期</param>
+        /// <returns>当前NoticeID的最大值</returns>
+        public static string getMaxNoticeID(DateTime date)
+        {
+            var db = new EFDbContext();
+            var list = db.Notices.ToList();
+            var query = list.Where(t => t.NoticeID.Substring(1, 8) == date.ToString("yyyyMMdd"))
+                            .Max(t => t.NoticeID);
+
+            if (string.IsNullOrEmpty(query))
+                return string.Format("V{0}{1}", date.ToString("yyyyMMdd"), "0000");
+            else return query;
+        }
+
+        /// <summary>
+        /// 获取指定日期的下一NoticeID
+        /// </summary>
+        /// <param name="date">发布通知日期</param>
+        /// <returns>下一NoticeID</returns>
+        public static string getNextNoticeID(DateTime date)
+        {
+            return get4Next(getMaxNoticeID(date));
+        }
+
     }
 }
