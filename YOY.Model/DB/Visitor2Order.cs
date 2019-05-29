@@ -7,28 +7,36 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YOY.Model
+namespace YOY.Model.DB
 {
     /// <summary>
-    /// 卡信息实体
+    /// 游客订单映射实体
     /// </summary>
-    [Table("Cards")]
+    [Table("Visitor2Order")]
     [DataContract]
-    public class Card
+    public class Visitor2Order
     {
+        /// <summary>
+        /// 游客ID
+        /// </summary>
+        [Column("VisitorID")]
+        [DataMember]
+        public string VisitorID { get; set; }
+
+        /// <summary>
+        /// 订单ID
+        /// </summary>
+        [Key]
+        [Column("OrderID")]
+        [DataMember]
+        public string OrderID { get; set; }
+
         /// <summary>
         /// 卡ID
         /// </summary>
-        [Key]
         [Column("CardID")]
         [DataMember]
         public string CardID { get; set; }
 
-        /// <summary>
-        /// 卡状态，0：未使用，1：使用中
-        /// </summary>
-        [Column("CardState")]
-        [DataMember]
-        public int CardState { get; set; }
     }
 }

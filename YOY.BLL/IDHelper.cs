@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using YOY.DAL;
-using YOY.Model;
+using YOY.Model.DB;
 
 namespace YOY.BLL
 {

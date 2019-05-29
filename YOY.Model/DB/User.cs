@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
-namespace YOY.Model
+namespace YOY.Model.DB
 {
     /// <summary>
     /// 用户信息实体类

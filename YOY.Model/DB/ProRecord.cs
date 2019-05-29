@@ -7,36 +7,37 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YOY.Model
+namespace YOY.Model.DB
 {
     /// <summary>
-    /// 游客订单映射实体
+    /// 项目实时运行信息实体类
     /// </summary>
-    [Table("Visitor2Order")]
+    [Table("ProjectRecord")]
     [DataContract]
-    public class Visitor2Order
+    public class ProRecord
     {
         /// <summary>
-        /// 游客ID
+        /// 项目ID  主键
         /// </summary>
-        [Column("VisitorID")]
+        [Key]
+        [Column("ProjectID", Order = 1)]
+        [DataMember]
+        public string ProjectID { get; set; }
+
+        /// <summary>
+        /// 游客ID  主键
+        /// </summary>
+        [Key]
+        [Column("VisitorID", Order = 2)]
         [DataMember]
         public string VisitorID { get; set; }
 
         /// <summary>
-        /// 订单ID
+        /// 游玩状态 （0：等待  1：游玩）
         /// </summary>
-        [Key]
-        [Column("OrderID")]
+        [Column("PlayState")]
         [DataMember]
-        public string OrderID { get; set; }
-
-        /// <summary>
-        /// 卡ID
-        /// </summary>
-        [Column("CardID")]
-        [DataMember]
-        public string CardID { get; set; }
+        public int PlayState { get; set; }
 
     }
 }

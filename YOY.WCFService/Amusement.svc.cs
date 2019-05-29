@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using YOY.BLL;
 using YOY.DAL;
+using YOY.Model.DB;
 using YOY.Model;
 
 namespace YOY.WCFService

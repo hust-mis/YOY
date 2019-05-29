@@ -7,20 +7,20 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YOY.Model
-{
+namespace YOY.Model.DB
+{        
     /// <summary>
     /// 项目实时运行信息实体类
     /// </summary>
-    [Table("ProjectRecord")]
+    [Table("ProjectOperation")]
     [DataContract]
-    public class ProRecord
+    public class Operation
     {
         /// <summary>
         /// 项目ID  主键
         /// </summary>
         [Key]
-        [Column("ProjectID", Order = 1)]
+        [Column("ProjectID", Order = 1 )]
         [DataMember]
         public string ProjectID { get; set; }
 
@@ -38,6 +38,7 @@ namespace YOY.Model
         [Column("PlayState")]
         [DataMember]
         public int PlayState { get; set; }
+        
 
     }
 }

@@ -51,30 +51,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Card.cs" />
-    <Compile Include="Commodity.cs" />
+    <Compile Include="DB\Card.cs" />
+    <Compile Include="DB\Commodity.cs" />
     <Compile Include="Location.cs" />
-    <Compile Include="Group.cs" />
-    <Compile Include="Locator.cs" />
-    <Compile Include="Notice.cs" />
-    <Compile Include="Order.cs" />
-    <Compile Include="Payment.cs" />
-    <Compile Include="Project.cs" />
-    <Compile Include="Operation.cs" />
-    <Compile Include="ProRecord.cs" />
+    <Compile Include="DB\Group.cs" />
+    <Compile Include="DB\Locator.cs" />
+    <Compile Include="DB\Notice.cs" />
+    <Compile Include="DB\Order.cs" />
+    <Compile Include="DB\Payment.cs" />
+    <Compile Include="DB\Project.cs" />
+    <Compile Include="DB\Operation.cs" />
+    <Compile Include="DB\ProRecord.cs" />
     <Compile Include="Response.cs" />
-    <Compile Include="Store.cs" />
-    <Compile Include="Ticket.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="DB\Store.cs" />
+    <Compile Include="DB\Ticket.cs" />
+    <Compile Include="DB\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User2Order.cs" />
-    <Compile Include="Visitor.cs" />
-    <Compile Include="Visitor2Card.cs" />
-    <Compile Include="Visitor2Order.cs" />
+    <Compile Include="DB\User2Order.cs" />
+    <Compile Include="DB\Visitor.cs" />
+    <Compile Include="DB\Visitor2Card.cs" />
+    <Compile Include="DB\Visitor2Order.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RFID\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

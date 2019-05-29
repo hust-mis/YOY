@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using YOY.Model;
+using YOY.Model.DB;
 
 namespace YOY.WCFService
 {

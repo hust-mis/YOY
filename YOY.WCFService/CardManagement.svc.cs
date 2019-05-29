@@ -7,7 +7,7 @@ using System.ServiceModel;
 using System.Text;
 using YOY.BLL;
 using YOY.DAL;
-using YOY.Model;
+using YOY.Model.DB;
 
 namespace YOY.WCFService
 {

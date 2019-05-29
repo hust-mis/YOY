@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YOY.Model
+namespace YOY.Model.DB
 {
     /// <summary>
     /// 支付信息实体

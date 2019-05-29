@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using YOY.Model;
+using YOY.Model.DB;
 
 namespace YOY.WCFService
 {
