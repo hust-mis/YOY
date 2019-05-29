@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YOY.BLL", "YOY.BLL\YOY.BLL.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YOY.WCFService", "YOY.WCFService\YOY.WCFService.csproj", "{EEF01989-A141-4BB9-9BFE-F0D6BEB48797}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YOY.ModuleReader", "YOY.ModuleReader\YOY.ModuleReader.csproj", "{006939B0-6F92-4758-89A5-D324B5910558}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EEF01989-A141-4BB9-9BFE-F0D6BEB48797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEF01989-A141-4BB9-9BFE-F0D6BEB48797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEF01989-A141-4BB9-9BFE-F0D6BEB48797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{006939B0-6F92-4758-89A5-D324B5910558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{006939B0-6F92-4758-89A5-D324B5910558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{006939B0-6F92-4758-89A5-D324B5910558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{006939B0-6F92-4758-89A5-D324B5910558}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
