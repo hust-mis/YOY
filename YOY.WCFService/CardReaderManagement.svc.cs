@@ -27,9 +27,9 @@ namespace YOY.WCFService
             
             try
             {
-                CardHelper.Connect();
-                v = CardHelper.GetCardUser();
-                CardHelper.DisConnect();
+                //CardHelper.Connect();
+                //v = CardHelper.GetCardUser();
+                //CardHelper.DisConnect();
                 return ResponseHelper.Success(v);
             }
             catch (Exception ex)
@@ -49,10 +49,10 @@ namespace YOY.WCFService
 
             try
             {
-                CardHelper.Connect();
-                bool i = CardHelper.BindVisitor("V00001");
-                CardHelper.DisConnect();
-                if (i)
+                //CardHelper.Connect();
+                //bool i = CardHelper.BindVisitor("V00001");
+                //CardHelper.DisConnect();
+                if (true)
                 {
                     return ResponseHelper.Success("绑定成功!");
                 }
