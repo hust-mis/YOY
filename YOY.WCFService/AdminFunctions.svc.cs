@@ -46,10 +46,9 @@ namespace YOY.WCFService
                 }
                 catch (Exception ex)
                 {
-                    if (ex.InnerException == null)
-                        return ResponseHelper.Failure(ex.Message);
-                    else
-                        return ResponseHelper.Failure(ex.InnerException.Message);
+                    while (ex.InnerException != null)
+                        ex = ex.InnerException;
+                    return ResponseHelper.Failure(ex.Message);
                 }
             }
 
@@ -93,10 +92,9 @@ namespace YOY.WCFService
             }
             catch (Exception ex)
             {
-                if (ex.InnerException == null)
-                    return ResponseHelper.Failure(ex.Message);
-                else
-                    return ResponseHelper.Failure(ex.InnerException.Message);
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
             }
 
         }
@@ -140,10 +138,9 @@ namespace YOY.WCFService
             }
             catch (Exception ex)
             {
-                if (ex.InnerException == null)
-                    return ResponseHelper.Failure(ex.Message);
-                else
-                    return ResponseHelper.Failure(ex.InnerException.Message);
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
             }
 
         }
@@ -230,10 +227,9 @@ namespace YOY.WCFService
             }
             catch(Exception ex)
             {
-                if (ex.InnerException == null)
-                    return ResponseHelper.Failure(ex.Message);
-                else
-                    return ResponseHelper.Failure(ex.InnerException.Message);
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
             }
             #endregion
         }
@@ -307,10 +303,9 @@ namespace YOY.WCFService
             }
             catch (Exception ex)
             {
-                if (ex.InnerException == null)
-                    return ResponseHelper.Failure(ex.Message);
-                else
-                    return ResponseHelper.Failure(ex.InnerException.Message);
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
             }
             #endregion
         }
