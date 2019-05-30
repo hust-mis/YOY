@@ -95,7 +95,7 @@ namespace YOY.Model.DB
         /// </summary>
         [Column("CheckTime")]
         [DataMember]
-        public DateTime CheckTime { get; set; }
+        public DateTime? CheckTime { get; set; }
 
     }
 }

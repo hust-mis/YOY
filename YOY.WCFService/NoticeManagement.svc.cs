@@ -37,13 +37,18 @@ namespace YOY.WCFService
                 OccurTime = OccurTime,
                 OccurAddress = OccurAddress,
                 NoticeDetail = NoticeDetail,
-                NoticeStatus = 0
+                NoticeStatus = 0,
+                Remarks = "",
+                CheckTime = null
+
+
+
             };
 
             try
             {
                 EFHelper.Add<Notice>(notice);  //通知信息提交数据库
-                return ResponseHelper.Success(new List<string> { "发布成功，等待审核！" });
+                return ResponseHelper.Success(new List<string>() { "发布成功，等待审核！" });
             }
             catch (Exception ex)
             {
@@ -69,7 +74,7 @@ namespace YOY.WCFService
                     var query = from q in db.Notices.Where(n => n.VisitorID == VisitorID)
                                 select new { q.NoticeID , q.NoticeType , q.OccurTime , q.OccurAddress , q.NoticeDetail , q.NoticeStatus , q.Remarks};
 
-                    if (query.Count() == 0) return ResponseHelper.Failure("您还未发布通知！");
+                    if (query.Count() == 0) return ResponseHelper.Success(new List<string>() { "您还未发布通知！" });
                     return ResponseHelper.Success(query.ToList());
                 }
             }
@@ -111,7 +116,7 @@ namespace YOY.WCFService
                     Del = query.Single();
                     Del.NoticeStatus = 3;  //已失效
                     EFHelper.Update<Notice>(Del);  //提交数据库修改
-                    return ResponseHelper.Success(query.ToList());
+                    return ResponseHelper.Success(new List<string>() { "删除成功！" });
                 }
             }
             catch (Exception ex)
