@@ -146,6 +146,8 @@ namespace YOY.WCFService
 
         }
 
+        #region 设备绑定管理
+
         /// <summary>
         /// 绑定卡操作的接口
         /// </summary>
@@ -390,5 +392,870 @@ namespace YOY.WCFService
                 return ResponseHelper.Failure(ex.Message);
             }
         }
+        #endregion
+
+        #region 游乐园数据管理
+
+        #region User表（动态）
+
+        public Stream GetAllUsers()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<User>());
+            }
+            catch(Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetUsersByKey(string PhoneNumber)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<User>().Where(t => t.PhoneNumber == PhoneNumber).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Tickets表（静态）
+
+        public Stream GetAllTickets()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Ticket>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddTicket(Ticket ticket)
+        {
+            try
+            {
+                if(EFHelper.Add(ticket))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetTicketsByKey(string TicketID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Ticket>().Where(t => t.TicketID == TicketID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream UpdateTickets(string TicketID, Ticket ticket)
+        {
+            try
+            {
+                ticket.TicketID = TicketID;
+                if (EFHelper.Update(ticket))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("修改失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteTickets(string TicketID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new Ticket() { TicketID = TicketID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Visitor表（动态）
+
+        public Stream GetAllVisitors()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Visitor>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetVisitorsByKey(string VisitorID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Visitor>().Where(t => t.VisitorID == VisitorID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Group表（动态）
+
+        public Stream GetAllGroups()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Group>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetGroupsByKey(string GroupID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Group>().Where(t => t.GroupID == GroupID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Order表（动态）
+
+        public Stream GetAllOrders()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Order>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetOrdersByKey(string OrderID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Order>().Where(t => t.OrderID == OrderID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Payment表（动态）
+
+        public Stream GetAllPayments()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Payment>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetPaymentsByKey(string OrderID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Payment>().Where(t => t.OrderID == OrderID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Visitor2Order表（动态）
+
+        public Stream GetAllVisitor2Orders()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Visitor2Order>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetVisitor2OrdersByKey(string OrderID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Visitor2Order>().Where(t => t.OrderID == OrderID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region User2Order表（动态）
+
+        public Stream GetAllUser2Orders()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<User2Order>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetUser2OrdersByKey(string OrderID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<User2Order>().Where(t => t.OrderID == OrderID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Cards表（半静态）
+
+        public Stream GetAllCards()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Card>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddCard(Card card)
+        {
+            try
+            {
+                if (EFHelper.Add(card))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetCardsByKey(string CardID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Card>().Where(t => t.CardID == CardID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteCards(string CardID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new Card() { CardID = CardID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Visitor2Card表（动态）
+
+        public Stream GetAllVisitor2Cards()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Visitor2Card>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetVisitor2CardsByKey(string VisitorID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Visitor2Card>().Where(t => t.VisitorID == VisitorID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Locators表（半静态）
+
+        public Stream GetAllLocators()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Locator>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddLocator(Locator locator)
+        {
+            try
+            {
+                if (EFHelper.Add(locator))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetLocatorsByKey(string LocatorID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Locator>().Where(t => t.LocatorID == LocatorID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream UpdateLocators(string LocatorID, Locator locator)
+        {
+            try
+            {
+                locator.LocatorID = LocatorID;
+                if (EFHelper.Update(locator))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("修改失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteLocators(string LocatorID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new Locator() { LocatorID = LocatorID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Commodities表（静态）
+
+        public Stream GetAllCommodities()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Commodity>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddCommodity(Commodity commodity)
+        {
+            try
+            {
+                if (EFHelper.Add(commodity))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetCommoditiesByKey(string CommodityID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Commodity>().Where(t => t.CommodityID == CommodityID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream UpdateCommodities(string CommodityID, Commodity commodity)
+        {
+            try
+            {
+                commodity.CommodityID = CommodityID;
+                if (EFHelper.Update(commodity))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("修改失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteCommodities(string CommodityID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new Commodity() { CommodityID = CommodityID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Stores表（静态）
+
+        public Stream GetAllStores()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Store>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddStore(Store store)
+        {
+            try
+            {
+                if (EFHelper.Add(store))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetStoresByKey(string StoreID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Store>().Where(t => t.StoreID == StoreID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream UpdateStores(string StoreID, Store store)
+        {
+            try
+            {
+                store.StoreID = StoreID;
+                if (EFHelper.Update(store))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("修改失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteStores(string StoreID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new Store() { StoreID = StoreID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region ChargeProjects表（静态）
+
+        public Stream GetAllChargeProjects()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<ChargeProject>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddChargeProject(ChargeProject chargeProject)
+        {
+            try
+            {
+                if (EFHelper.Add(chargeProject))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetChargeProjectsByKey(string ProjectID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<ChargeProject>().Where(t => t.ProjectID == ProjectID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream UpdateChargeProjects(string ProjectID, ChargeProject chargeProject)
+        {
+            try
+            {
+                chargeProject.ProjectID = ProjectID;
+                if (EFHelper.Update(chargeProject))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("修改失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteChargeProjects(string ProjectID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new ChargeProject() { ProjectID = ProjectID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Projects表（静态）
+
+        public Stream GetAllProjects()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Project>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream AddProject(Project project)
+        {
+            try
+            {
+                if (EFHelper.Add(project))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("添加失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetProjectsByKey(string ProjectID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Project>().Where(t => t.ProjectID == ProjectID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream UpdateProjects(string ProjectID, Project project)
+        {
+            try
+            {
+                project.ProjectID = ProjectID;
+                if (EFHelper.Update(project))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("修改失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream DeleteProjects(string ProjectID)
+        {
+            try
+            {
+                if (EFHelper.Delete(new Project() { ProjectID = ProjectID }))
+                    return ResponseHelper.Success(null);
+                else return ResponseHelper.Failure("删除失败！");
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region ProjectOperation表（动态）
+
+        public Stream GetAllProjectOperations()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Operation>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetProjectOperationsByKey(string ProjectID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<Operation>().Where(t => t.ProjectID == ProjectID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #region ProjectRecord表（动态）
+
+        public Stream GetAllProjectRecords()
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<ProRecord>());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GetProjectRecordsByKey(string ProjectID)
+        {
+            try
+            {
+                return ResponseHelper.Success(EFHelper.GetAll<ProRecord>().Where(t => t.ProjectID == ProjectID).ToList());
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+        #endregion
+
+        #endregion
     }
 }

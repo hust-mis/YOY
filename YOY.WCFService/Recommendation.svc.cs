@@ -118,29 +118,8 @@ namespace YOY.WCFService
 
         }
 
-        public Stream GetStoreInfo(string VisitorID)//获取店铺信息
+        public Stream GetStoreInfo()//获取店铺信息
         {
-
-            #region 查询游客当前位置
-            var locators = EFHelper.GetAll<Locator>().Where(t => t.VisitorID == VisitorID && t.LocatorState == 1);
-            if (locators.Count() == 0) return ResponseHelper.Failure("该游客没有定位信息！");
-
-            var localsense = new LocalSense();
-            localsense.Run();
-            Thread.Sleep(100);
-            new Thread(() => { localsense.Stop(); }).Start();
-
-            var locator = locators.Single();
-            var q = localsense.locations
-                        .Where(t => t.ID == locator.LocatorID)
-                        .OrderByDescending(t => t.Timestamp)
-                        .Select(t => new { t.X, t.Y }).First();
-            
-            if (q == null) return ResponseHelper.Failure("没有查询到位置信息！");
-            int vx = int.Parse(q.X);
-            int vy = int.Parse(q.Y);
-            #endregion
-
             try
             {
                 using (var db = new EFDbContext())
