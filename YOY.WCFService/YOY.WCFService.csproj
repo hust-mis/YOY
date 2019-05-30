@@ -74,7 +74,6 @@
     <Content Include="AdminFunctions.svc" />
     <Content Include="Amusement.svc" />
     <Content Include="CardManagement.svc" />
-    <Content Include="CardReaderManagement.svc" />
     <Content Include="NoticeManagement.svc" />
     <Content Include="Recommendation.svc" />
     <Content Include="TicketPurchase.svc" />
@@ -92,13 +91,9 @@
     <Compile Include="CardManagement.svc.cs">
       <DependentUpon>CardManagement.svc</DependentUpon>
     </Compile>
-    <Compile Include="CardReaderManagement.svc.cs">
-      <DependentUpon>CardReaderManagement.svc</DependentUpon>
-    </Compile>
     <Compile Include="IAdminFunctions.cs" />
     <Compile Include="IAmusement.cs" />
     <Compile Include="ICardManagement.cs" />
-    <Compile Include="ICardReaderManagement.cs" />
     <Compile Include="INoticeManagement.cs" />
     <Compile Include="IRecommendation.cs" />
     <Compile Include="ITicketPurchase.cs" />
