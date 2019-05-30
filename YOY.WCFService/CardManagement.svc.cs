@@ -86,18 +86,19 @@ namespace YOY.WCFService
             //在数据库V2C表中修改卡余额
             try
             {
-                using (var db = new EFDbContext())
-                {
+                //using (var db = new EFDbContext())
+                //{
                     List<Visitor2Card> ALLv2c = EFHelper.GetAll<Visitor2Card>();
                     Visitor2Card new_v2c = ALLv2c.Where(v => v.VisitorID == VisitorID).Single();
-                    var left = from v2c in db.Visitor2Cards
-                               where v2c.VisitorID == VisitorID
-                               select v2c.Balance;
-                    new_v2c.Balance = new_v2c.Balance + left.Single();//余额增加
+                    //var left = from v2c in db.Visitor2Cards
+                    //           where v2c.VisitorID == VisitorID
+                    //           select v2c.Balance;
+
+                    new_v2c.Balance = new_v2c.Balance + Amount;//余额增加
                     EFHelper.Update(new_v2c);//余额修改提交数据库
                     return ResponseHelper.Success(RechargeOrder.OrderID);//返回OrderID
                     
-                }
+                //}
             }
             catch (Exception ex)
             {
