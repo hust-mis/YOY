@@ -75,11 +75,19 @@ namespace YOY.WCFService
                 PaymentTime = DateTime.Now,
                 PaymentAmount = Amount
             };
+            //增加游客订单映射
+            Visitor2Order v2o = new Visitor2Order()
+            {
+                VisitorID = VisitorID,
+                CardID = CardID,
+                OrderID = id
 
-            //订单、支付信息——提交数据库
+            };
+
+            //订单、支付、游客订单映射信息——提交数据库
             EFHelper.Add<Order>(RechargeOrder);
             EFHelper.Add<Payment>(RechargePay);
-
+            EFHelper.Add<Visitor2Order>(v2o);
             #endregion
 
             #region 修改数据库V2C表中相应游客的卡余额，返回订单ID
@@ -96,7 +104,7 @@ namespace YOY.WCFService
 
                     new_v2c.Balance = new_v2c.Balance + Amount;//余额增加
                     EFHelper.Update(new_v2c);//余额修改提交数据库
-                    return ResponseHelper.Success(RechargeOrder.OrderID);//返回OrderID
+                    return ResponseHelper.Success( new List<string>() { RechargeOrder.OrderID });//返回OrderID
                     
                 //}
             }
@@ -142,6 +150,8 @@ namespace YOY.WCFService
                         return ResponseHelper.Failure("卡已失效（卡片处于已退卡状态）！");
                     }
                     CardID = card.Single().CardID;//记录卡ID
+                    if(CardID == null)
+                        return ResponseHelper.Failure("未找到该游客的卡");
                 }
             }
             catch (Exception ex)
@@ -173,11 +183,19 @@ namespace YOY.WCFService
                 PaymentTime = DateTime.Now,
                 PaymentAmount = Amount
             };
+            //增加游客订单映射
+            Visitor2Order v2o = new Visitor2Order()
+            {
+                VisitorID = VisitorID,
+                CardID = CardID,
+                OrderID = id
 
-            //订单、支付信息——提交数据库
+            };
+
+            //订单、支付、游客订单映射信息——提交数据库
             EFHelper.Add<Order>(RechargeOrder);
             EFHelper.Add<Payment>(RechargePay);
-
+            EFHelper.Add<Visitor2Order>(v2o);
             #endregion
 
             #region 修改数据库V2C表中相应游客的卡余额，返回订单ID
@@ -192,7 +210,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure("退款金额大于余额！退款失败！");
                 }
                 EFHelper.Update(new_v2c);//余额修改提交数据库
-                return ResponseHelper.Success(RechargeOrder.OrderID);//返回OrderID
+                return ResponseHelper.Success(new List<string>() { RechargeOrder.OrderID });//返回OrderID
             }
             catch (Exception ex)
             {
