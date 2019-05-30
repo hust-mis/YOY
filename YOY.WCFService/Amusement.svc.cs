@@ -383,6 +383,7 @@ namespace YOY.WCFService
 
                 var query = from t in team
                             join l in location on t.LocatorID equals l.ID
+                            orderby t.VisitorID
                             select new { t.VisitorID, t.Name, l.X, l.Y };
 
                 if (query.Count() == 0) return ResponseHelper.Failure("没有查询到位置信息！");
