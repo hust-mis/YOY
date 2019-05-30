@@ -53,5 +53,21 @@ namespace YOY.WCFService
         UriTemplate = "RefuseNotice")]
         Stream RefuseNotice(string NoticeID , string Remarks);
 
+        #region 设备绑定管理
+        /// <summary>
+        /// 绑定卡操作的接口
+        /// </summary>
+        /// <param name="VisitorID">游客ID</param>
+        /// <returns>绑定结果</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "BindingCard")]
+        Stream BindingCard(string VisitorID);
+
+        #endregion
+
     }
 }

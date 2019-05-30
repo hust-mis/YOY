@@ -217,17 +217,11 @@ namespace YOY.WCFService
                     var card = from v2c in db.Visitor2Cards
                                where v2c.VisitorID == VisitorID
                                select v2c;
-                    if (card.Single().UnbindTime != null)
-                    {
-                        return ResponseHelper.Failure("卡已失效（卡片处于已退卡状态）！");
-                    }
+
+                    if (card.Count() == 0)
+                        return ResponseHelper.Failure("该游客没有绑定游园卡！");
 
                     CardID = card.Single().CardID;//记录卡ID
-                    if (CardID == null)
-                    {
-                        return ResponseHelper.Failure("未找到该游客的卡");
-                    }
-                        
                 }
             }
             catch (Exception ex)

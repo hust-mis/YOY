@@ -37,20 +37,5 @@ namespace YOY.Model.DB
         [Column("Balance")]
         [DataMember]
         public double Balance { get; set; }
-
-        /// <summary>
-        /// 绑卡时间
-        /// </summary>
-        [Column("BindTime")]
-        [DataMember]
-        public DateTime BindTime { get; set; }
-
-        /// <summary>
-        /// 退卡时间
-        /// </summary>
-        [Column("UnbindTime")]
-        [DataMember]
-        public DateTime? UnbindTime { get; set; }
-
     }
 }
