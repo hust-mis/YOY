@@ -29,11 +29,7 @@ namespace YOY.WCFService
             if (RecomType != 1 && RecomType != 2)
                 return ResponseHelper.Failure("推荐类型不存在！");
 
-            #region 获取游客当前位置坐标并记录到vx，vy(暂时设置为（0，0）
             
-            //DateTime time = DateTime.Now;
-            
-            #endregion
 
             #region 按距离推荐（距离升序）
             if (RecomType == 1)
@@ -205,77 +201,33 @@ namespace YOY.WCFService
             #region 数据完整性检查
             if (VisitorID == null)
                 return ResponseHelper.Failure("游客信息缺失！");
-            if (PaymentType != 4) return ResponseHelper.Failure("目前仅支持卡支付！");
-            if (orders == null || orders.Count == 0) return ResponseHelper.Failure("订单信息不完全！");
+            if (PaymentType != 4)
+                return ResponseHelper.Failure("目前仅支持卡支付！");
+            if (orders == null || orders.Count == 0)
+                return ResponseHelper.Failure("订单信息不完全！");
             #endregion
 
-            #region 新增订单与支付信息并提交数据库
-            string id = IDHelper.getNextOrderID(DateTime.Now, 0);
-            List<Order> GoodsOrders = new List<Order>();
-            List<Payment> GoodsPays = new List<Payment>();
-            List<Commodity> commodities = EFHelper.GetAll<Commodity>();
-            foreach (Order order in orders)
-            {
-                for (int i = 1; i <= order.CommodityNum; i++)
-                {
-                    GoodsOrders.Add(new Order()
-                    {
-                        OrderID = id,
-                        OrderTime = DateTime.Now,
-                        OrderState = 1,
-                        CommodityID = order.CommodityID,
-                        CommodityType = 2,
-                        CommodityNum = order.CommodityNum,
-                        DoneTime = Convert.ToDateTime(DateTime.Now.ToString())
-                    });
-
-                    GoodsPays.Add(new Payment()
-                    {
-                        OrderID = order.OrderID,
-                        PaymentType = PaymentType,
-                        PaymentTime = DateTime.Now,
-                        PaymentAmount = commodities.Where(c => c.CommodityID == order.CommodityID).Single().CommodityPrice
-                    });
-                    
-                    id = IDHelper.get4Next(id);
-                }
-            }
-
-            //订单与支付信息提交数据库
-            for (int i = 0; i < GoodsOrders.Count; i++)
-            {
-                EFHelper.Add<Order>(GoodsOrders[i]);
-                EFHelper.Add<Payment>(GoodsPays[i]);
-            }
-            #endregion
-
-            #region 计算订单总价,查询余额并判断,并在数据库中扣款
-            float sum = 0;
-            List<Commodity> commodity = EFHelper.GetAll<Commodity>();
-            foreach (Order item in GoodsOrders)
-            {
-                sum = sum + item.CommodityNum * commodity.Where(c => c.CommodityID == item.CommodityID).Single().CommodityPrice;
-            }
-
+            #region 根据游客ID查询卡ID
+            string CardID = "";
             try
             {
-                
-                //数据库余额修改
                 using (var db = new EFDbContext())
                 {
 
-                    var left = from v2c in db.Visitor2Cards
+                    var card = from v2c in db.Visitor2Cards
                                where v2c.VisitorID == VisitorID
-                               select v2c.Balance;
+                               select v2c;
+                    if (card.Single().UnbindTime != null)
+                    {
+                        return ResponseHelper.Failure("卡已失效（卡片处于已退卡状态）！");
+                    }
 
-                    if (left.Single() < sum)
-                        return ResponseHelper.Failure("余额不足！");
-
-                    List<Visitor2Card> ALLv2c = EFHelper.GetAll<Visitor2Card>();
-                    Visitor2Card new_v2c = ALLv2c.Where(v => v.VisitorID == VisitorID).Single();
-                    new_v2c.Balance = new_v2c.Balance - sum;
-                    EFHelper.Update(new_v2c);
-                    return ResponseHelper.Success(GoodsOrders.Select(t => t.OrderID).ToList());//返回OrderID
+                    CardID = card.Single().CardID;//记录卡ID
+                    if (CardID == null)
+                    {
+                        return ResponseHelper.Failure("未找到该游客的卡");
+                    }
+                        
                 }
             }
             catch (Exception ex)
@@ -287,29 +239,106 @@ namespace YOY.WCFService
             }
             #endregion
 
+            #region 新增订单、支付、游客订单映射信息并提交数据库
+            string id = IDHelper.getNextOrderID(DateTime.Now, 0);
+            List<Order> GoodsOrders = new List<Order>();
+            List<Payment> GoodsPays = new List<Payment>();
+            List<Visitor2Order> v2o = new List<Visitor2Order>();
+            List<Commodity> commodities = EFHelper.GetAll<Commodity>();
 
+            foreach (Order order in orders)
+            {
+                GoodsOrders.Add(new Order()
+                {
+                    OrderID = id,
+                    OrderTime = DateTime.Now,
+                    OrderState = 1,
+                    CommodityID = order.CommodityID,
+                    CommodityType = 2,
+                    CommodityNum = order.CommodityNum,
+                    DoneTime = Convert.ToDateTime(DateTime.Now.ToString())
+                });
+
+                GoodsPays.Add(new Payment()
+                {
+                    OrderID = order.OrderID,
+                    PaymentType = PaymentType,
+                    PaymentTime = DateTime.Now,
+                    PaymentAmount = order.CommodityNum * (commodities.Where(c => c.CommodityID == order.CommodityID).Single().CommodityPrice)
+                });
+
+                v2o.Add(new Visitor2Order()
+                {
+                    VisitorID = VisitorID,
+                    OrderID = id,
+                    CardID = CardID
+
+                });
+
+                id = IDHelper.get4Next(id);
+
+
+            }
+            #endregion
             
+            #region 完成扣款，订单、支付、游客订单映射信息提交数据库
+            //计算订单总价,查询余额并判断，完成扣款
+            float sum = 0;
+            foreach (Payment item in GoodsPays)
+            {
+                sum += (float)item.PaymentAmount;
+            }
+            try
+            {
+                using (var db = new EFDbContext())
+                {
+                    //数据库余额修改
+                    Visitor2Card new_v2c = db.Visitor2Cards.Where(v => v.VisitorID == VisitorID).Single();
+                    if (new_v2c.Balance < sum)
+                        return ResponseHelper.Failure("余额不足！");
+                    new_v2c.Balance -= sum;//完成扣款
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
+
+
+            //提交数据库
+            for (int i = 0; i < GoodsOrders.Count; i++)
+            {
+                try
+                {
+                    using (var db = new EFDbContext())
+                    {
+                        
+                        //订单、支付、游客订单映射信息——提交数据库
+                        db.Orders.Add(GoodsOrders[i]);
+                        db.Payments.Add(GoodsPays[i]);
+                        db.Visitor2Orders.Add(v2o[i]);
+                        db.SaveChanges();
+                        
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException == null)
+                        return ResponseHelper.Failure(ex.Message);
+                    else
+                        return ResponseHelper.Failure(ex.InnerException.Message);
+                }
+            }
+            #endregion
+
+            return ResponseHelper.Success(GoodsOrders.Select(t => t.OrderID).ToList());//返回OrderID
         }
-
-        //public LocationRecords GetVisitorLocation(string VisitorID)//生成新位置记录并保存到数据库
-        //{
-        //    int vx = 0;
-        //    int vy = 0;
-        //    DateTime time = DateTime.Now;
-
-        //    LocationRecords vlr = new LocationRecords();
-        //    vlr.VisitorID = VisitorID;
-        //    vlr.XLocation = vx;
-        //    vlr.YLocation = vy;
-        //    vlr.LocationTime = time;
-        //    vlr.LocatorID = "L00001";
-
-        //    EFHelper.Add<LocationRecords>(vlr);
-
-        //    return vlr;
-        //}
-
-
 
     }
 }
