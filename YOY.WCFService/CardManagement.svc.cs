@@ -54,7 +54,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure(ex.InnerException.Message);
             }
 
-           #region 新增订单，新增支付信息，并提交数据库 
+            #region 新增订单，新增支付信息，新增游客订单映射
             string id = IDHelper.getNextOrderID(DateTime.Now, 0);
             //生成新订单
             Order RechargeOrder = new Order()
@@ -75,27 +75,34 @@ namespace YOY.WCFService
                 PaymentTime = DateTime.Now,
                 PaymentAmount = Amount
             };
+            //增加游客订单映射
+            Visitor2Order v2o = new Visitor2Order()
+            {
+                VisitorID = VisitorID,
+                CardID = CardID,
+                OrderID = id
 
-            //订单、支付信息——提交数据库
-            EFHelper.Add<Order>(RechargeOrder);
-            EFHelper.Add<Payment>(RechargePay);
-
+            };
             #endregion
 
-            #region 修改数据库V2C表中相应游客的卡余额，返回订单ID
+            #region 修改数据库，返回订单ID
             //在数据库V2C表中修改卡余额
             try
             {
                 using (var db = new EFDbContext())
                 {
-                    List<Visitor2Card> ALLv2c = EFHelper.GetAll<Visitor2Card>();
-                    Visitor2Card new_v2c = ALLv2c.Where(v => v.VisitorID == VisitorID).Single();
-                    var left = from v2c in db.Visitor2Cards
-                               where v2c.VisitorID == VisitorID
-                               select v2c.Balance;
-                    new_v2c.Balance = new_v2c.Balance + left.Single();//余额增加
-                    EFHelper.Update(new_v2c);//余额修改提交数据库
-                    return ResponseHelper.Success(new List<string>() { RechargeOrder.OrderID });//返回OrderID
+                    
+                    //订单、支付、游客订单映射信息——提交数据库
+                    db.Orders.Add(RechargeOrder);
+                    db.Payments.Add(RechargePay);
+                    db.Visitor2Orders.Add(v2o);
+                    
+                    //修改余额（增加）
+                    Visitor2Card new_v2c = db.Visitor2Cards.Where(v => v.VisitorID == VisitorID).Single();
+                    new_v2c.Balance += Amount;
+
+                    db.SaveChanges();
+                    return ResponseHelper.Success( new List<string>() { RechargeOrder.OrderID });//返回OrderID
                     
                 }
             }
@@ -141,6 +148,8 @@ namespace YOY.WCFService
                         return ResponseHelper.Failure("卡已失效（卡片处于已退卡状态）！");
                     }
                     CardID = card.Single().CardID;//记录卡ID
+                    if(CardID == null)
+                        return ResponseHelper.Failure("未找到该游客的卡");
                 }
             }
             catch (Exception ex)
@@ -151,7 +160,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure(ex.InnerException.Message);
             }
 
-            #region 新增订单，新增支付信息，并提交数据库 
+            #region 新增订单，新增支付信息，新增游客订单映射
             string id = IDHelper.getNextOrderID(DateTime.Now, 0);
             //生成新订单
             Order RechargeOrder = new Order()
@@ -172,26 +181,42 @@ namespace YOY.WCFService
                 PaymentTime = DateTime.Now,
                 PaymentAmount = Amount
             };
+            //增加游客订单映射
+            Visitor2Order v2o = new Visitor2Order()
+            {
+                VisitorID = VisitorID,
+                CardID = CardID,
+                OrderID = id
 
-            //订单、支付信息——提交数据库
-            EFHelper.Add<Order>(RechargeOrder);
-            EFHelper.Add<Payment>(RechargePay);
-
+            };
             #endregion
 
-            #region 修改数据库V2C表中相应游客的卡余额，返回订单ID
+            #region 修改数据库，返回订单ID
             //在数据库V2C表中修改卡余额
             try
             {
-                List<Visitor2Card> ALLv2c = EFHelper.GetAll<Visitor2Card>();
-                Visitor2Card new_v2c = ALLv2c.Where(v => v.VisitorID == VisitorID).Single();
-                new_v2c.Balance = new_v2c.Balance - Amount;//余额减少
-                if (new_v2c.Balance < 0)
+                using (var db = new EFDbContext())
                 {
-                    return ResponseHelper.Failure("退款金额大于余额！退款失败！");
+
+                    //订单、支付、游客订单映射信息——提交数据库
+                    db.Orders.Add(RechargeOrder);
+                    db.Payments.Add(RechargePay);
+                    db.Visitor2Orders.Add(v2o);
+                    
+                    //修改余额（减少）
+                    Visitor2Card new_v2c = db.Visitor2Cards.Where(v => v.VisitorID == VisitorID).Single();
+                    new_v2c.Balance -= Amount;
+                    //合法性检查
+                    if (new_v2c.Balance < 0)
+                    {
+                        return ResponseHelper.Failure("退款金额大于余额！退款失败！");
+                    }
+
+                    db.SaveChanges();
+                    return ResponseHelper.Success(new List<string>() { RechargeOrder.OrderID });//返回OrderID
+
                 }
-                EFHelper.Update(new_v2c);//余额修改提交数据库
-                return ResponseHelper.Success(new List<string>() { RechargeOrder.OrderID });//返回OrderID
+                
             }
             catch (Exception ex)
             {
