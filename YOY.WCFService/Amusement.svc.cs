@@ -28,12 +28,16 @@ namespace YOY.WCFService
 
                     Visitor result = query.Single();
                     if (result.Password != visitor.Password) return ResponseHelper.Failure("密码错误！");
+                    if ( DateTime.Now < result.PlayTime ) return ResponseHelper.Failure("未到游玩时间！");
+                    if( DateTime.Now > result.PlayTime.AddDays(1) ) return ResponseHelper.Failure("已超过游玩时间！");
+
                     result.Name = visitor.Name;
                     result.Age = visitor.Age;
                     result.Gender = visitor.Gender;
                     result.UID = visitor.UID;
 
-                    db.SaveChanges();
+                     db.SaveChanges();
+   
                     return ResponseHelper.Success(new List<int>() { result.VisitorState });
                 }
             }

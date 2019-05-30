@@ -56,6 +56,7 @@ namespace YOY.WCFService
         #region 设备绑定管理
         /// <summary>
         /// 绑定卡操作的接口
+        /// 将要绑定的卡放在指定位置
         /// </summary>
         /// <param name="VisitorID">游客ID</param>
         /// <returns>绑定结果</returns>
@@ -66,6 +67,46 @@ namespace YOY.WCFService
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "BindingCard")]
         Stream BindingCard(string VisitorID);
+
+        /// <summary>
+        /// 解绑卡
+        /// 将要解绑的卡放在指定位置
+        /// </summary>
+        /// <returns>解绑结果</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "UnbindingCard")]
+        Stream UnbindingCard();
+
+        /// <summary>
+        /// 绑定LocalSense
+        /// </summary>
+        /// <param name="VisitorID">游客ID</param>
+        /// <param name="LocatorID">LocalSense定位设备的ID</param>
+        /// <returns>绑定结果</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "BindingLocators")]
+        Stream BindingLocators(string VisitorID, string LocatorID);
+
+        /// <summary>
+        /// 取消定位设备绑定
+        /// </summary>
+        /// <param name="LocatorID">LocalSense定位设备的ID</param>
+        /// <returns>绑定结果</returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "UnbindingLocators")]
+        Stream UnbindingLocators(string LocatorID);
 
         #endregion
 

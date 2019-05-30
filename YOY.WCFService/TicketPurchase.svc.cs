@@ -38,24 +38,8 @@ namespace YOY.WCFService
             #endregion
 
             #region 用户不存在则添加
-            using (var db = new EFDbContext())
-            {
-                if (db.Users.Where(t => t.PhoneNumber == user.PhoneNumber).ToList().Count == 0)
-                {
-                    try
-                    {
-                        if (!EFHelper.Add(user))
-                            return ResponseHelper.Failure("新增用户错误");
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.InnerException == null)
-                            return ResponseHelper.Failure(ex.Message);
-                        else
-                            return ResponseHelper.Failure(ex.InnerException.Message);
-                    }
-                }
-            }
+            if (EFHelper.GetAll<User>().Where(t => t.PhoneNumber == user.PhoneNumber).Count() == 0)
+                EFHelper.Add<User>(user);
             #endregion
 
             #region 新增订单数据，每张票唯一对应一张订单
