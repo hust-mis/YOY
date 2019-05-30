@@ -250,7 +250,7 @@ namespace YOY.WCFService
             #endregion
 
             #region 计算订单总价,查询余额并判断,并在数据库中扣款
-            float sum = 0;
+            double sum = 0;
             List<Commodity> commodity = EFHelper.GetAll<Commodity>();
             foreach (Order item in GoodsOrders)
             {

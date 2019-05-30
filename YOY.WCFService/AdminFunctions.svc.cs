@@ -86,7 +86,7 @@ namespace YOY.WCFService
 
                     //提交数据库修改
                     EFHelper.Update<Notice>(Pass);  
-                    return ResponseHelper.Success("已审核通过申请！");
+                    return ResponseHelper.Success(new List<string>(){ "已审核通过申请！"});
                 }
             }
             catch (Exception ex)
@@ -133,7 +133,7 @@ namespace YOY.WCFService
 
                     //提交数据库修改
                     EFHelper.Update<Notice>(Pass);  
-                    return ResponseHelper.Success("经审核，拒绝发布申请！");
+                    return ResponseHelper.Success(new List<string>() { "经审核，拒绝发布申请！" });
                 }
             }
             catch (Exception ex)

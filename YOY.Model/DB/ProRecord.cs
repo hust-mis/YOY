@@ -36,7 +36,7 @@ namespace YOY.Model.DB
         /// 游玩状态
         /// 0：等待
         /// 1：游玩
-        /// 2：退出
+        /// -1：退出
         /// </summary>
         [Key]
         [Column("PlayState",Order = 3)]

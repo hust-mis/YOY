@@ -50,7 +50,7 @@ namespace YOY.Model.DB
         /// </summary>
         [Column("UnbindTime")]
         [DataMember]
-        public DateTime UnbindTime { get; set; }
+        public DateTime? UnbindTime { get; set; }
 
     }
 }

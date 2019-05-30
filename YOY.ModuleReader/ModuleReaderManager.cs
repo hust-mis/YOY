@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YOY.BLL;
 using YOY.DAL;
 using YOY.Model.DB;
 
@@ -197,7 +198,6 @@ namespace YOY.ModuleReader
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -276,7 +276,7 @@ namespace YOY.ModuleReader
                                     ProjectID = ProjectID,
                                     VisitorID = v.VisitorID,
                                     Timestamp = v.Time,
-                                    PlayState = 2
+                                    PlayState = -1
                                 });
                             }
 
@@ -400,16 +400,31 @@ namespace YOY.ModuleReader
 
                     var v2c = from v in EFHelper.GetAll<Visitor2Card>()
                               join u in updateItems on v.CardID equals u.CardID
-                              select new { v.VisitorID, u.Time };
+                              join vi in EFHelper.GetAll<Visitor>() on v.VisitorID equals vi.VisitorID
+                              select new { v.VisitorID , vi.Name , u.Time , v.Balance , v.CardID };
 
                     if (v2c.Count() > 0)
                     {
-                        using (var db = new EFDbContext())
+                        var charge = EFHelper.GetAll<ChargeProject>().First(t => t.ProjectID == ProjectID);
+
+                        foreach (var v in v2c)
                         {
-                            foreach (var v in v2c)
+                            if (v.Balance < charge.ProjectPrice)
+                            {
+                                MessageBox.Show(string.Format("ID：{0}，用户：{1} 的余额不足 {2} 元，请充值后再尝试游玩！", v.VisitorID, v.Name, charge.ProjectPrice));
+                                continue;
+                            }
+                            
+                            //判断是否重复刷卡
+                            var isAgain = EFHelper.GetAll<Operation>().Where(t => t.VisitorID == v.VisitorID && t.PlayState == 1);
+                            if (isAgain.Count() > 0) continue;
+
+                            using (var db = new EFDbContext())
                             {
                                 var operation = db.ProjectOperation.First(t => t.ProjectID == ProjectID && t.VisitorID == v.VisitorID);
+                                //改变项目实时信息
                                 if (operation != null) operation.PlayState = 1;
+                                //增加项目历史记录
                                 db.ProjectRecord.Add(new ProRecord()
                                 {
                                     ProjectID = ProjectID,
@@ -417,9 +432,39 @@ namespace YOY.ModuleReader
                                     Timestamp = v.Time,
                                     PlayState = 1
                                 });
+                                //生成消费订单
+                                string orderId = IDHelper.getNextOrderID(DateTime.Now, 1);
+                                db.Orders.Add(new Order()
+                                {
+                                    OrderID = orderId,
+                                    OrderState = 1,
+                                    OrderTime = DateTime.Now,
+                                    CommodityID = charge.ProjectID,
+                                    CommodityNum = 1,
+                                    CommodityType = 1,
+                                    DoneTime = DateTime.Now
+                                });
+                                //成对应的支付信息
+                                db.Payments.Add(new Payment()
+                                {
+                                    OrderID = orderId ,
+                                    PaymentAmount = charge.ProjectPrice,
+                                    PaymentTime = DateTime.Now,
+                                    PaymentType = 4 
+                                });
+                                //增加游客支付的映射
+                                db.Visitor2Orders.Add(new Visitor2Order()
+                                {
+                                    CardID = v.CardID,
+                                    OrderID = orderId,
+                                    VisitorID = v.VisitorID
+                                });
+                                //扣去游客卡上的余额
+                                var visitor = db.Visitor2Cards.Where(t => t.VisitorID == v.VisitorID).Single();
+                                visitor.Balance -= charge.ProjectPrice;
+                                //提交事务
+                                db.SaveChanges();
                             }
-
-                            db.SaveChanges();
                         }
                     }
 

@@ -95,7 +95,7 @@ namespace YOY.WCFService
                                select v2c.Balance;
                     new_v2c.Balance = new_v2c.Balance + left.Single();//余额增加
                     EFHelper.Update(new_v2c);//余额修改提交数据库
-                    return ResponseHelper.Success(RechargeOrder.OrderID);//返回OrderID
+                    return ResponseHelper.Success(new List<string>() { RechargeOrder.OrderID });//返回OrderID
                     
                 }
             }
@@ -191,7 +191,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure("退款金额大于余额！退款失败！");
                 }
                 EFHelper.Update(new_v2c);//余额修改提交数据库
-                return ResponseHelper.Success(RechargeOrder.OrderID);//返回OrderID
+                return ResponseHelper.Success(new List<string>() { RechargeOrder.OrderID });//返回OrderID
             }
             catch (Exception ex)
             {
@@ -214,7 +214,6 @@ namespace YOY.WCFService
         {
             try
             {
-
                 //数据库余额查询
                 using (var db = new EFDbContext())
                 {

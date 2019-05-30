@@ -268,8 +268,62 @@ namespace YOY.WCFService
 
         public Stream GetTeamerInfo(string VisitorID)
         {
-            //TODO
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(VisitorID))
+                return ResponseHelper.Failure("游客ID不能为空！");
+
+            try
+            {
+                var group = EFHelper.GetAll<Group>().Where(t => t.VisitorID == VisitorID && t.InviteeState == 1);
+                if (group.Count() == 0) return ResponseHelper.Success(null);
+
+                var groups = EFHelper.GetAll<Group>().Where(t => t.GroupID == group.Single().GroupID && t.InviteeState == 1);
+
+                var visitors = from g in groups
+                               join v in EFHelper.GetAll<Visitor>() on g.VisitorID equals v.VisitorID
+                               select new { g.GroupID, v.VisitorID, v.Name };
+
+                var operations = EFHelper.GetAll<Operation>();
+                List<Operation> status = new List<Operation>();
+                foreach( var g in groups )
+                {
+                    var operation = operations.Where(t => t.VisitorID == g.VisitorID);
+                    if (operation.Count() == 0)
+                        status.Add(new Operation()
+                        {
+                            ProjectID = null,
+                            PlayState = -1,
+                            VisitorID = g.VisitorID
+                        });
+                    else
+                        status.Add(operation.Single());
+                }
+
+                var v2p = from s in status
+                          join p in EFHelper.GetAll<Project>() on s.ProjectID equals p.ProjectID into visitorStauts
+                          from vs in visitorStauts.DefaultIfEmpty()
+                          select new { s.VisitorID, s.PlayState, s.ProjectID, vs?.ProjectName };
+
+                var query = from v in visitors
+                            join p in v2p on v.VisitorID equals p.VisitorID
+                            select new
+                            {
+                                v.GroupID,
+                                TeamerID = v.VisitorID,
+                                TeamerName = v.Name,
+                                TeamerStatus = p.PlayState,
+                                p.ProjectID,
+                                p.ProjectName
+                            };
+
+                return ResponseHelper.Success(query.ToList());
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
         }
 
         public Stream GetLocation(string VisitorID)
@@ -294,7 +348,7 @@ namespace YOY.WCFService
                             .Select(t => new { t.X, t.Y }).First();
 
                 if (query == null) return ResponseHelper.Failure("没有查询到位置信息！");
-                else return ResponseHelper.Success(query);
+                else return ResponseHelper.Success( new List<dynamic> { query });
             }
             catch (Exception ex)
             {
@@ -338,7 +392,7 @@ namespace YOY.WCFService
                             select new { t.VisitorID, t.Name, l.X, l.Y };
 
                 if (query.Count() == 0) return ResponseHelper.Failure("没有查询到位置信息！");
-                else return ResponseHelper.Success(query);
+                else return ResponseHelper.Success(query.ToList());
             }
             catch (Exception ex)
             {
@@ -366,7 +420,7 @@ namespace YOY.WCFService
 
                 var query = from v2o in v2os
                             join o in orders on v2o.OrderID equals o.OrderID
-                            where o.OrderState == 0 && o.DoneTime != null
+                            where o.CommodityType == 2 && o.DoneTime == null
                             join c in commodies on o.CommodityID equals c.CommodityID
                             select new
                             {
@@ -405,7 +459,7 @@ namespace YOY.WCFService
 
                 var query = from v2o in v2os
                             join o in orders on v2o.OrderID equals o.OrderID
-                            where o.OrderState == 1 && o.DoneTime == null
+                            where o.CommodityType == 2 && o.DoneTime != null
                             join c in commodies on o.CommodityID equals c.CommodityID
                             select new
                             {
@@ -433,12 +487,34 @@ namespace YOY.WCFService
         {
             if (string.IsNullOrEmpty(order.OrderID))
                 return ResponseHelper.Failure("订单ID不能为空！");
-            if (string.IsNullOrEmpty(order.CommodityID) || order.CommodityNum == 0)
+            if (string.IsNullOrEmpty(order.CommodityID) )
                 return ResponseHelper.Failure("退货商品信息不全！");
 
-            //TODO
+            try
+            {
+                using (var db = new EFDbContext())
+                {
+                    var orders = db.Orders.Where(t => t.OrderID == order.OrderID);
+                    if (orders.Count() == 0) return ResponseHelper.Failure("该订单不存在！");
+                    var v2o = db.Visitor2Orders.First(t => t.OrderID == order.OrderID);
+                    var v2c = db.Visitor2Cards.First(t => t.VisitorID == v2o.VisitorID);
+                    var query = db.Payments.Where(t => t.OrderID == order.OrderID).Select(t => new { t.PaymentAmount, t.PaymentType }).ToList();
+                    //修改数据库中相关记录
+                    orders.Single().OrderState = -1;
+                    v2c.Balance += query.Single().PaymentAmount;
 
-            throw new NotImplementedException();
+                    db.SaveChanges();
+                    return ResponseHelper.Success(query);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException == null)
+                    return ResponseHelper.Failure(ex.Message);
+                else
+                    return ResponseHelper.Failure(ex.InnerException.Message);
+            }
         }
         #endregion
 

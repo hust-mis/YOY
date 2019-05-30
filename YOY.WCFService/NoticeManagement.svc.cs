@@ -43,7 +43,7 @@ namespace YOY.WCFService
             try
             {
                 EFHelper.Add<Notice>(notice);  //通知信息提交数据库
-                return ResponseHelper.Success("发布成功，等待审核！");
+                return ResponseHelper.Success(new List<string> { "发布成功，等待审核！" });
             }
             catch (Exception ex)
             {

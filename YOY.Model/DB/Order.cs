@@ -65,6 +65,6 @@ namespace YOY.Model.DB
         /// </summary>
         [Column("DoneTime")]
         [DataMember]
-        public DateTime DoneTime { get; set; }
+        public DateTime? DoneTime { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace YOY.Model.DB
         public double PaymentAmount { get; set; }
 
         /// <summary>
-        /// 支付方式，0：支付宝，1：微信，2：银联，3：现金
+        /// 支付方式，0：支付宝，1：微信，2：银联，3：现金，4：卡
         /// </summary>
         [Column("PaymentType")]
         [DataMember]

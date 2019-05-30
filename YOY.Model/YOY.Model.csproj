@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\Card.cs" />
+    <Compile Include="DB\ChargeProject.cs" />
     <Compile Include="DB\Commodity.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="DB\Group.cs" />

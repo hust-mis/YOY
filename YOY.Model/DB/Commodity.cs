@@ -50,7 +50,7 @@ namespace YOY.Model.DB
         /// </summary>
         [Column("CommodityPrice")]
         [DataMember]
-        public float CommodityPrice { get; set; }
+        public double CommodityPrice { get; set; }
 
         /// <summary>
         /// 商品描述
