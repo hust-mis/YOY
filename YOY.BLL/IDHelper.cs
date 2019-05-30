@@ -159,7 +159,7 @@ namespace YOY.BLL
                             .Max(t => t.NoticeID);
 
             if (string.IsNullOrEmpty(query))
-                return string.Format("V{0}{1}", date.ToString("yyyyMMdd"), "0000");
+                return string.Format("N{0}{1}", date.ToString("yyyyMMdd"), "0000");
             else return query;
         }
 

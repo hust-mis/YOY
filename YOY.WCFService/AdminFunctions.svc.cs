@@ -8,6 +8,7 @@ using YOY.DAL;
 using YOY.Model.DB;
 using YOY.Model;
 using ModuleTech;
+using System.Data.SqlClient;
 
 
 namespace YOY.WCFService
@@ -25,22 +26,24 @@ namespace YOY.WCFService
         public Stream GetAllNotice(DateTime[] Date)
         {
             List<Notice> result = new List<Notice>();
+            //var result  ; 
 
             for ( int i = 0 ; i < Date.Length ; i++ )
             {
+                DateTime date = Date[i];
+                //DateTime enddate = Date[i].AddDays(20);
                 try
                 {
                     using (var db = new EFDbContext())
                     {
-                        var query = from n in db.Notices.Where(n1 => n1.NoticeTime > Date[i])
-                                    where n.NoticeTime < Date[i].AddDays(1)
-                                    select n;
+                        var today = db.Notices.Where(n => (n.NoticeTime).ToString().Substring(0, 10) == date.ToString().Substring(0, 10));// && n.NoticeTime<enddate);
                         
-                        foreach (Notice item in query)
-                        {
-                            result.Add (item);
-                        }
+                        //var query = from n in today
+                        //            where n.NoticeTime < enddate
+                        //            select n;
+                        result.AddRange(today);
                         
+
                     }
                     
                 }
@@ -52,8 +55,8 @@ namespace YOY.WCFService
                         return ResponseHelper.Failure(ex.InnerException.Message);
                 }
             }
-
             return ResponseHelper.Success(result);
+            //return ResponseHelper.Success(result);
         }
 
         /// <summary>
