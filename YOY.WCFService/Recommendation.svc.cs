@@ -234,7 +234,7 @@ namespace YOY.WCFService
             #endregion
 
             #region 新增订单、支付、游客订单映射信息并提交数据库
-            string id = IDHelper.getNextOrderID(DateTime.Now, 0);
+            string id = IDHelper.getNextOrderID(DateTime.Now, 2);
             List<Order> GoodsOrders = new List<Order>();
             List<Payment> GoodsPays = new List<Payment>();
             List<Visitor2Order> v2o = new List<Visitor2Order>();
@@ -250,12 +250,12 @@ namespace YOY.WCFService
                     CommodityID = order.CommodityID,
                     CommodityType = 2,
                     CommodityNum = order.CommodityNum,
-                    DoneTime = Convert.ToDateTime(DateTime.Now.ToString())
+                    DoneTime = Convert.ToDateTime(DateTime.Now)
                 });
 
                 GoodsPays.Add(new Payment()
                 {
-                    OrderID = order.OrderID,
+                    OrderID = id,
                     PaymentType = PaymentType,
                     PaymentTime = DateTime.Now,
                     PaymentAmount = order.CommodityNum * (commodities.Where(c => c.CommodityID == order.CommodityID).Single().CommodityPrice)
@@ -292,6 +292,16 @@ namespace YOY.WCFService
                         return ResponseHelper.Failure("余额不足！");
                     new_v2c.Balance -= sum;//完成扣款
                     
+                    //订单、支付、游客订单映射信息——提交数据库
+                    for (int i = 0; i < GoodsOrders.Count; i++)
+                    {
+                        
+                        db.Orders.Add(GoodsOrders[i]);
+                        db.Payments.Add(GoodsPays[i]);
+                        db.Visitor2Orders.Add(v2o[i]);
+                    }
+
+                    db.SaveChanges();
                 }
 
             }
@@ -302,33 +312,7 @@ namespace YOY.WCFService
                 else
                     return ResponseHelper.Failure(ex.InnerException.Message);
             }
-
-
-            //提交数据库
-            for (int i = 0; i < GoodsOrders.Count; i++)
-            {
-                try
-                {
-                    using (var db = new EFDbContext())
-                    {
-                        
-                        //订单、支付、游客订单映射信息——提交数据库
-                        db.Orders.Add(GoodsOrders[i]);
-                        db.Payments.Add(GoodsPays[i]);
-                        db.Visitor2Orders.Add(v2o[i]);
-                        db.SaveChanges();
-                        
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    if (ex.InnerException == null)
-                        return ResponseHelper.Failure(ex.Message);
-                    else
-                        return ResponseHelper.Failure(ex.InnerException.Message);
-                }
-            }
+            
             #endregion
 
             return ResponseHelper.Success(GoodsOrders.Select(t => t.OrderID).ToList());//返回OrderID

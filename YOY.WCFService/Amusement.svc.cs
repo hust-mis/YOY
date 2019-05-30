@@ -55,7 +55,7 @@ namespace YOY.WCFService
                 {
                     var query = notices.OrderByDescending(t => t.NoticeTime)
                                         .Where(t => t.NoticeStatus == 1)
-                                        .Select(t => new { t.NoticeID , t.NoticeType ,t.OccurTime , t.OccurAddress , t.NoticeDetail, CheckTime = t.CheckTime.ToString("yyyy-MM-dd HH:mm:ss") })
+                                        .Select(t => new { t.NoticeID , t.NoticeType ,t.OccurTime , t.OccurAddress , t.NoticeDetail, CheckTime = t.CheckTime?.ToString("yyyy-MM-dd HH:mm:ss") })
                                         .ToList();
                     return ResponseHelper.Success(query);
                 }
@@ -63,7 +63,7 @@ namespace YOY.WCFService
                 {
                     var query = notices.Where(t => t.NoticeTime > Convert.ToDateTime(LastGetTime) && t.NoticeStatus == 1)
                                        .OrderByDescending(t => t.NoticeTime)
-                                       .Select(t => new { t.NoticeID, t.NoticeType, t.OccurTime, t.OccurAddress, t.NoticeDetail, CheckTime = t.CheckTime.ToString("yyyy-MM-dd HH:mm:ss") })
+                                       .Select(t => new { t.NoticeID, t.NoticeType, t.OccurTime, t.OccurAddress, t.NoticeDetail, CheckTime = t.CheckTime?.ToString("yyyy-MM-dd HH:mm:ss") })
                                        .ToList();
                     return ResponseHelper.Success(query);
                 }

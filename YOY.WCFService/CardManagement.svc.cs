@@ -54,7 +54,7 @@ namespace YOY.WCFService
             }
 
             #region 新增订单，新增支付信息，新增游客订单映射
-            string id = IDHelper.getNextOrderID(DateTime.Now, 0);
+            string id = IDHelper.getNextOrderID(DateTime.Now, 3);
             //生成新订单
             Order RechargeOrder = new Order()
             {
@@ -64,7 +64,7 @@ namespace YOY.WCFService
                 CommodityID = CardID,
                 CommodityType = 3,//卡相关
                 CommodityNum = (int)Amount,
-                DoneTime = Convert.ToDateTime(DateTime.Now.ToString())
+                DoneTime = Convert.ToDateTime(DateTime.Now)
             };
             //生成新支付信息
             Payment RechargePay = new Payment()
@@ -157,7 +157,7 @@ namespace YOY.WCFService
             }
 
             #region 新增订单，新增支付信息，新增游客订单映射
-            string id = IDHelper.getNextOrderID(DateTime.Now, 0);
+            string id = IDHelper.getNextOrderID(DateTime.Now, 3);
             //生成新订单
             Order RechargeOrder = new Order()
             {
@@ -167,7 +167,7 @@ namespace YOY.WCFService
                 CommodityID = CardID,
                 CommodityType = 3,//卡相关
                 CommodityNum = (int)Amount,
-                DoneTime = Convert.ToDateTime(DateTime.Now.ToString())
+                DoneTime = Convert.ToDateTime(DateTime.Now)
             };
             //生成新支付信息
             Payment RechargePay = new Payment()
