@@ -23,24 +23,22 @@ namespace YOY.WCFService
         /// </summary>
         /// <param name="Date">日期数组  [‘YY-MM-DD hh:mm:ss’,’ YY-MM-DD hh:mm:ss’]</param>
         /// <returns></returns>
-        public Stream GetAllNotice(DateTime[] Date)
+        public Stream GetAllNotice(string[] Date)
         {
+            
             List<Notice> result = new List<Notice>();
             //var result  ; 
 
             for ( int i = 0 ; i < Date.Length ; i++ )
             {
-                DateTime date = Date[i];
-                //DateTime enddate = Date[i].AddDays(20);
+                DateTime date = Convert.ToDateTime(Date[i]);
+                DateTime enddate = Convert.ToDateTime(Date[i]).AddDays(1);
                 try
                 {
                     using (var db = new EFDbContext())
                     {
-                        var today = db.Notices.Where(n => (n.NoticeTime).ToString().Substring(0, 10) == date.ToString().Substring(0, 10));// && n.NoticeTime<enddate);
-                        
-                        //var query = from n in today
-                        //            where n.NoticeTime < enddate
-                        //            select n;
+                        //var today = db.Notices.Where(n => n.NoticeTime > date && n.NoticeTime<enddate);
+                        var today = db.Notices.Where(n => n.NoticeTime > date && n.NoticeTime < enddate);
                         result.AddRange(today);
                         
 

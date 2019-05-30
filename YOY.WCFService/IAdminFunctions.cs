@@ -27,7 +27,7 @@ namespace YOY.WCFService
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "GetAllNotice")]
-        Stream GetAllNotice(DateTime[] Date);
+        Stream GetAllNotice(string[] Date);
 
         /// <summary>
         /// 审核通过申请
