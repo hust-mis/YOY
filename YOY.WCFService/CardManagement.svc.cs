@@ -268,10 +268,11 @@ namespace YOY.WCFService
                                where v2o.VisitorID == VisitorID
                                join p in db.Payments on v2o.OrderID equals p.OrderID
                                select new { v2o.OrderID , p.PaymentAmount , p.PaymentType , p.PaymentTime};
-                    var result = from r in record
+                    var query = from r in record
                                  join o in db.Orders on r.OrderID equals o.OrderID
                                  where o.CommodityType == 3  //卡相关
                                  select new { o.OrderID, o.OrderState, r.PaymentAmount, r.PaymentType, r.PaymentTime };
+                    var result = query.OrderByDescending(s => s.PaymentTime);
 
                     return ResponseHelper.Success(result.ToList());//返回OrderID
                 }
