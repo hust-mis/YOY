@@ -1257,5 +1257,76 @@ namespace YOY.WCFService
         #endregion
 
         #endregion
+
+        #region 首页展示
+
+        public Stream TotalNumber()
+        {
+            try
+            {
+                int num = EFHelper.GetAll<Visitor2Card>().Count();
+                return ResponseHelper.Success(new List<int> { num });
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream GrossProfit(string Date)
+        {
+            try
+            {
+                DateTime time = Convert.ToDateTime(Date);
+                var query = from o in EFHelper.GetAll<Order>()
+                            where o.OrderState == 1
+                            join p in EFHelper.GetAll<Payment>() on o.OrderID equals p.OrderID
+                            where p.PaymentTime.ToShortDateString() == time.ToShortDateString()
+                            select p;
+                double profit = query.Sum(t => t.PaymentAmount);
+
+                return ResponseHelper.Success(new List<double> { profit });
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream TotalPlay()
+        {
+            try
+            {
+                int num = EFHelper.GetAll<Operation>().Where(t => t.PlayState == 1).Count();
+                return ResponseHelper.Success(new List<int> { num });
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        public Stream TotalWait()
+        {
+            try
+            {
+                int num = EFHelper.GetAll<Operation>().Where(t => t.PlayState == 0).Count();
+                return ResponseHelper.Success(new List<int> { num });
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }

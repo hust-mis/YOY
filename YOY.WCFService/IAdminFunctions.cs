@@ -598,5 +598,57 @@ namespace YOY.WCFService
 
         #endregion
 
+        #region 首页展示
+        /// <summary>
+        /// 获取园内总人数
+        /// </summary>
+        /// <returns>园内总人数</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "HomePage/TotalNumber")]
+        Stream TotalNumber();
+
+        /// <summary>
+        /// 获取某天的总收入（毛利润）
+        /// </summary>
+        /// <param name="Date">查询日期</param>
+        /// <returns>总收入</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "HomePage/GrossProfit/{Date}")]
+        Stream GrossProfit(string Date);
+
+        /// <summary>
+        /// 获取园内总的游玩项目的人数
+        /// </summary>
+        /// <returns>总的游玩项目的人数</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "HomePage/TotalPlay")]
+        Stream TotalPlay();
+
+        /// <summary>
+        /// 获取园内总的等待项目的人数
+        /// </summary>
+        /// <returns>总的等待项目的人数</returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "HomePage/TotalWait")]
+        Stream TotalWait();
+
+        #endregion
+
     }
 }
