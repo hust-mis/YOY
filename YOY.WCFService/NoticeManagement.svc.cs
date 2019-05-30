@@ -63,6 +63,7 @@ namespace YOY.WCFService
         /// <returns></returns>
         public Stream GetMyNotice(string VisitorID)
         {
+            
             try
             {
                 using (var db = new EFDbContext())
@@ -70,7 +71,7 @@ namespace YOY.WCFService
                     var query = from q in db.Notices.Where(n => n.VisitorID == VisitorID)
                                 select new { q.NoticeID , q.NoticeType , q.OccurTime , q.OccurAddress , q.NoticeDetail , q.NoticeStatus , q.Remarks};
 
-                    if (query.Count() == 0) return ResponseHelper.Success(new List<string>() { "您还未发布通知！" });
+                    if (query.Count() == 0) return ResponseHelper.Success(query.ToList());
                     return ResponseHelper.Success(query.ToList());
                 }
             }

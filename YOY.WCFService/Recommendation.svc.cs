@@ -244,7 +244,7 @@ namespace YOY.WCFService
                     CommodityID = order.CommodityID,
                     CommodityType = 2,
                     CommodityNum = order.CommodityNum,
-                    DoneTime = Convert.ToDateTime(DateTime.Now)
+                    DoneTime = null
                 });
 
                 GoodsPays.Add(new Payment()
