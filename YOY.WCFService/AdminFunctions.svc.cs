@@ -170,7 +170,7 @@ namespace YOY.WCFService
             }
             catch(Exception ex)
             {
-                ResponseHelper.Failure(ex.Message);
+                return ResponseHelper.Failure(ex.Message);
             }
 
             modulerdr.ParamSet("ReadPlan", new SimpleReadPlan(TagProtocol.GEN2, new List<int>() { 4 }.ToArray(), 30));
@@ -187,6 +187,7 @@ namespace YOY.WCFService
                                    group r by r.EPCString into c
                                    select new { CardID = c.Key };
                         cardID = card.First().CardID;
+                        modulerdr.Disconnect();
 
                         break;
                     }
@@ -194,7 +195,10 @@ namespace YOY.WCFService
                 catch (Exception ex)
                 {
                     if(++errCnt >= 10)
+                    {
+                        modulerdr.Disconnect();
                         return ResponseHelper.Failure(ex.Message);
+                    }
                 }
             }
             if( string.IsNullOrEmpty(cardID) )
@@ -252,7 +256,7 @@ namespace YOY.WCFService
             }
             catch (Exception ex)
             {
-                ResponseHelper.Failure(ex.Message);
+                return ResponseHelper.Failure(ex.Message);
             }
 
             modulerdr.ParamSet("ReadPlan", new SimpleReadPlan(TagProtocol.GEN2, new List<int>() { 4 }.ToArray(), 30));
@@ -269,6 +273,7 @@ namespace YOY.WCFService
                                    group r by r.EPCString into c
                                    select new { CardID = c.Key };
                         cardID = card.First().CardID;
+                        modulerdr.Disconnect();
 
                         break;
                     }
@@ -276,7 +281,11 @@ namespace YOY.WCFService
                 catch (Exception ex)
                 {
                     if (++errCnt >= 10)
+                    {
+                        modulerdr.Disconnect();
                         return ResponseHelper.Failure(ex.Message);
+                    }
+                        
                 }
             }
             if (string.IsNullOrEmpty(cardID))

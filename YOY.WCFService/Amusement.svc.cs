@@ -7,6 +7,7 @@ using YOY.BLL;
 using YOY.DAL;
 using YOY.Model.DB;
 using YOY.Model;
+using ModuleTech;
 
 namespace YOY.WCFService
 {
@@ -28,20 +29,20 @@ namespace YOY.WCFService
 
                     Visitor result = query.Single();
                     if (result.Password != visitor.Password) return ResponseHelper.Failure("密码错误！");
-                    if ( DateTime.Now < result.PlayTime ) return ResponseHelper.Failure("未到游玩时间！");
-                    if( DateTime.Now > result.PlayTime.AddDays(1) ) return ResponseHelper.Failure("已超过游玩时间！");
+                    if (DateTime.Now < result.PlayTime) return ResponseHelper.Failure("未到游玩时间！");
+                    if (DateTime.Now > result.PlayTime.AddDays(1)) return ResponseHelper.Failure("已超过游玩时间！");
 
                     result.Name = visitor.Name;
                     result.Age = visitor.Age;
                     result.Gender = visitor.Gender;
                     result.UID = visitor.UID;
 
-                     db.SaveChanges();
-   
+                    db.SaveChanges();
+
                     return ResponseHelper.Success(new List<int>() { result.VisitorState });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -54,11 +55,11 @@ namespace YOY.WCFService
             try
             {
                 var notices = EFHelper.GetAll<Notice>();
-                if( string.IsNullOrEmpty(LastGetTime) )
+                if (string.IsNullOrEmpty(LastGetTime))
                 {
                     var query = notices.OrderByDescending(t => t.NoticeTime)
                                         .Where(t => t.NoticeStatus == 1)
-                                        .Select(t => new { t.NoticeID , t.NoticeType ,t.OccurTime , t.OccurAddress , t.NoticeDetail, CheckTime = t.CheckTime?.ToString("yyyy-MM-dd HH:mm:ss") })
+                                        .Select(t => new { t.NoticeID, t.NoticeType, t.OccurTime, t.OccurAddress, t.NoticeDetail, CheckTime = t.CheckTime?.ToString("yyyy-MM-dd HH:mm:ss") })
                                         .ToList();
                     return ResponseHelper.Success(query);
                 }
@@ -71,7 +72,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Success(query);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -97,7 +98,7 @@ namespace YOY.WCFService
 
                 return ResponseHelper.Success(query.ToList());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -114,7 +115,7 @@ namespace YOY.WCFService
             {
                 using (var db = new EFDbContext())
                 {
-                    var groups = db.Groups.Where(t => t.VisitorID == VisitorID );
+                    var groups = db.Groups.Where(t => t.VisitorID == VisitorID);
                     if (groups.Count() == 0) return ResponseHelper.Failure("该游客没有邀请记录！");
                     if (groups.Where(t => t.InviterID == InviterID).Count() == 0)
                         return ResponseHelper.Failure("没有该条邀请记录！");
@@ -128,7 +129,7 @@ namespace YOY.WCFService
 
                 return ResponseHelper.Success(null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -204,7 +205,7 @@ namespace YOY.WCFService
                         {
                             GroupID = group.GroupID,
                             VisitorID = InviteeID,
-                            InviteeState = 0 ,
+                            InviteeState = 0,
                             InviterID = InviterID
                         });
                     }
@@ -213,7 +214,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Success(null);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -223,7 +224,7 @@ namespace YOY.WCFService
 
         public Stream SearchVisitor(string SearchKey)
         {
-            if (string.IsNullOrEmpty(SearchKey) )
+            if (string.IsNullOrEmpty(SearchKey))
                 return ResponseHelper.Failure("关键字信息不完全！");
 
             try
@@ -234,7 +235,7 @@ namespace YOY.WCFService
                 query = visitors.Where(t => t.VisitorID == SearchKey);
                 return ResponseHelper.Success(query.Select(t => new { t.VisitorID, t.Name }).ToList());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -254,7 +255,7 @@ namespace YOY.WCFService
                 EFHelper.Delete(group.Single());
                 return ResponseHelper.Success(null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 while (ex.InnerException != null)
                     ex = ex.InnerException;
@@ -280,7 +281,7 @@ namespace YOY.WCFService
 
                 var operations = EFHelper.GetAll<Operation>();
                 List<Operation> status = new List<Operation>();
-                foreach( var g in groups )
+                foreach (var g in groups)
                 {
                     var operation = operations.Where(t => t.VisitorID == g.VisitorID);
                     if (operation.Count() == 0)
@@ -343,7 +344,7 @@ namespace YOY.WCFService
                             .Select(t => new { t.X, t.Y }).First();
 
                 if (query == null) return ResponseHelper.Failure("没有查询到位置信息！");
-                else return ResponseHelper.Success( new List<dynamic> { query });
+                else return ResponseHelper.Success(new List<dynamic> { query });
             }
             catch (Exception ex)
             {
@@ -378,7 +379,7 @@ namespace YOY.WCFService
                 new Thread(() => { localsense.Stop(); }).Start();
 
                 var location = new List<Location>();
-                foreach( var t in team )
+                foreach (var t in team)
                     location.Add(localsense.locations.Where(q => q.ID == t.LocatorID).OrderByDescending(q => q.Timestamp).FirstOrDefault());
 
                 var query = from t in team
@@ -411,11 +412,13 @@ namespace YOY.WCFService
 
                 var orders = EFHelper.GetAll<Order>().ToList();
                 var commodies = EFHelper.GetAll<Commodity>().ToList();
+                var stores = EFHelper.GetAll<Store>().ToList();
 
                 var query = from v2o in v2os
                             join o in orders on v2o.OrderID equals o.OrderID
                             where o.CommodityType == 2 && o.DoneTime == null
                             join c in commodies on o.CommodityID equals c.CommodityID
+                            join s in stores on c.StoreID equals s.StoreID
                             select new
                             {
                                 o.OrderID,
@@ -424,7 +427,9 @@ namespace YOY.WCFService
                                 c.CommodityName,
                                 CommodityPrice = c.CommodityPrice * o.CommodityNum,
                                 c.CommodityInfo,
-                                c.CommodityPic
+                                c.CommodityPic,
+                                c.StoreID,
+                                s.StoreName
                             };
 
                 return ResponseHelper.Success(query.ToList());
@@ -448,12 +453,14 @@ namespace YOY.WCFService
                 if (v2os.Count() == 0) return ResponseHelper.Success(null);
 
                 var orders = EFHelper.GetAll<Order>().ToList();
+                var stores = EFHelper.GetAll<Store>().ToList();
                 var commodies = EFHelper.GetAll<Commodity>().ToList();
 
                 var query = from v2o in v2os
                             join o in orders on v2o.OrderID equals o.OrderID
                             where o.CommodityType == 2 && o.DoneTime != null
                             join c in commodies on o.CommodityID equals c.CommodityID
+                            join s in stores on c.StoreID equals s.StoreID
                             select new
                             {
                                 o.OrderID,
@@ -462,7 +469,9 @@ namespace YOY.WCFService
                                 c.CommodityName,
                                 CommodityPrice = c.CommodityPrice * o.CommodityNum,
                                 c.CommodityInfo,
-                                c.CommodityPic
+                                c.CommodityPic,
+                                c.StoreID,
+                                s.StoreName
                             };
 
                 return ResponseHelper.Success(query.ToList());
@@ -479,7 +488,7 @@ namespace YOY.WCFService
         {
             if (string.IsNullOrEmpty(order.OrderID))
                 return ResponseHelper.Failure("订单ID不能为空！");
-            if (string.IsNullOrEmpty(order.CommodityID) )
+            if (string.IsNullOrEmpty(order.CommodityID))
                 return ResponseHelper.Failure("退货商品信息不全！");
 
             try
@@ -506,6 +515,98 @@ namespace YOY.WCFService
                     ex = ex.InnerException;
                 return ResponseHelper.Failure(ex.Message);
             }
+        }
+
+        public Stream PickUp(string StoreID)
+        {
+            if (string.IsNullOrEmpty(StoreID))
+                return ResponseHelper.Failure("没有店铺ID！");
+
+
+            #region 建立读卡器连接并读取卡ID
+            Reader modulerdr = null;
+            string cardID = null;
+            try
+            {
+                modulerdr = Reader.Create("192.168.0.103", Region.NA, 4);
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper.Failure(ex.Message);
+            }
+
+            //三号天线
+            modulerdr.ParamSet("ReadPlan", new SimpleReadPlan(TagProtocol.GEN2, new List<int>() { 3 }.ToArray(), 30));
+
+            while (true)
+            {
+                int errCnt = 0;   //失败次数
+                try
+                {
+                    TagReadData[] reads = modulerdr.Read(200);
+                    if (reads.Count() > 0)
+                    {
+                        var card = from r in reads
+                                   group r by r.EPCString into c
+                                   select new { CardID = c.Key };
+                        cardID = card.First().CardID;
+                        modulerdr.Disconnect();
+
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (++errCnt >= 10)
+                    {
+                        modulerdr.Disconnect();
+                        return ResponseHelper.Failure(ex.Message);
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(cardID))
+                return ResponseHelper.Failure("未能读取到卡ID！");
+            #endregion
+
+            #region 查询游客消费记录进行取货
+            try
+            {
+                var cards = EFHelper.GetAll<Card>().Where(t => t.CardID == cardID);
+                if (cards.Count() == 0) return ResponseHelper.Failure("此卡非法！");
+                if (cards.Single().CardState == 0)
+                    return ResponseHelper.Failure("此卡未绑定！");
+
+                var visitors = EFHelper.GetAll<Visitor2Card>().Where(t => t.CardID == cardID);
+                if (visitors.Count() == 0) return ResponseHelper.Failure("未找到该游客！");
+
+                var orderId = from v2o in EFHelper.GetAll<Visitor2Order>()
+                              where v2o.VisitorID == visitors.Single().VisitorID
+                              join o in EFHelper.GetAll<Order>() on v2o.OrderID equals o.OrderID
+                              where o.CommodityType == 2 && o.DoneTime == null
+                              join c in EFHelper.GetAll<Commodity>() on o.CommodityID equals c.CommodityID
+                              join s in EFHelper.GetAll<Store>() on c.StoreID equals s.StoreID
+                              where s.StoreID == StoreID
+                              select new { o.OrderID };
+
+                if (orderId.Count() == 0) return ResponseHelper.Failure("没有要取货的商品！");
+
+                using (var db = new EFDbContext())
+                {
+                    foreach (var id in orderId)
+                        db.Orders.Single(t => t.OrderID == id.OrderID).DoneTime = DateTime.Now;
+
+                    db.SaveChanges();
+                }
+
+                return ResponseHelper.Success(null);
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null)
+                    ex = ex.InnerException;
+                return ResponseHelper.Failure(ex.Message);
+            }
+            #endregion
         }
         #endregion
 

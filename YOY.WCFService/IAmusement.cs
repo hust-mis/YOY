@@ -201,6 +201,20 @@ namespace YOY.WCFService
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "Order/ReturnCommodity")]
         Stream ReturnCommodity(Order order);
+
+        /// <summary>
+        /// 取货接口
+        /// 读取相应的读卡器天线
+        /// </summary>
+        /// <param name="StoreID"></param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebInvoke(Method = "GET",
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json,
+        BodyStyle = WebMessageBodyStyle.WrappedRequest,
+        UriTemplate = "Order/PickUp/{StoreID}")]
+        Stream PickUp(string StoreID);
         #endregion
     }
 }

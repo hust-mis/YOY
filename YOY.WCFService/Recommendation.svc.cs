@@ -146,11 +146,10 @@ namespace YOY.WCFService
                 using (var db = new EFDbContext())
                 {
 
-                    var query = from s in EFHelper.GetAll<Store>()
-                                select new { s.StoreID, s.StoreName, s.StorePic, s.StoreAddress, s.StoreInfo, Distance = Math.Sqrt((s.StoreXLocation - vx) * (s.StoreXLocation - vx) + (s.StoreYLocation - vy) * (s.StoreYLocation - vy)) };
+                    var query = EFHelper.GetAll<Store>();
 
                     var result = from qu in query
-                                 orderby qu.Distance
+                                 orderby qu.StoreID
                                  select qu;
 
                     if (result.Count() == 0)
