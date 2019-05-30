@@ -60,7 +60,7 @@ namespace YOY.Model.DB
         public string Password { get; set; }
 
         /// <summary>
-        /// 游客激活状态，0：未激活；1：激活中；2：已失效
+        /// 游客激活状态，0：未游玩；1：已游玩
         /// </summary>
         [Column("VisitorState")]
         [DataMember]
