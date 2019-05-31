@@ -193,7 +193,7 @@ namespace YOY.WCFService
                     var U2O2V = from u2o in db.User2Orders
                                 where u2o.PhoneNumber == phoneNumber
                                 join v in db.Visitors on u2o.VisitorID equals v.VisitorID
-                                where v.VisitorState == 1 || v.VisitorState == 2
+                                where v.VisitorState == 1 
                                 select new { u2o.OrderID, u2o.VisitorID, v.Password, v.PlayTime };
 
                     var query = from o in db.Orders

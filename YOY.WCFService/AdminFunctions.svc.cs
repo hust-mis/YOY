@@ -52,7 +52,7 @@ namespace YOY.WCFService
                     return ResponseHelper.Failure(ex.Message);
                 }
             }
-            return ResponseHelper.Success(result);
+            return ResponseHelper.Success(result.OrderByDescending(t => t.NoticeTime).ToList());
             //return ResponseHelper.Success(result);
         }
 
@@ -61,42 +61,49 @@ namespace YOY.WCFService
         /// </summary>
         /// <param name="NoticeID">通知ID</param>
         /// <returns></returns>
-        public Stream PassNotice(string NoticeID)
+        public Stream PassNotice(string[] NoticeID)
         {
             Notice Pass = new Notice();
-
-            try
+            List<string> result = new List<string>();
+            foreach (var id in NoticeID)
             {
-                using (var db = new EFDbContext())
+                try
                 {
-                    var query = db.Notices.Where(n => n.NoticeID == NoticeID);
 
-                    //合法性检查
-                    if (query.Count() == 0)
-                        return ResponseHelper.Failure("未找到此通知！");
-                    if (query.Single().NoticeStatus == 3)
-                        return ResponseHelper.Failure("此通知已失效！");
-                    if (query.Single().NoticeStatus == 2)
-                        return ResponseHelper.Failure("此通知已被拒绝！");
-                    if (query.Single().NoticeStatus == 1)
-                        return ResponseHelper.Failure("此通知已通过审核，无需重复操作！");
 
-                    //修改通知状态为已通过审核，并记录审核时间
-                    Pass = query.Single();
-                    Pass.NoticeStatus = 1;  //通过申请
-                    Pass.CheckTime = DateTime.Now;//记录审核通过的时间
+                    using (var db = new EFDbContext())
+                    {
+                        var query = db.Notices.Where(n => n.NoticeID == id);
 
-                    //提交数据库修改
-                    EFHelper.Update<Notice>(Pass);  
-                    return ResponseHelper.Success(new List<string>(){ "已审核通过申请！"});
+                        //合法性检查
+                        if (query.Count() == 0)
+                            result.Add(string.Format("编号 {0} 审核失败：未找到此通知！", id));
+                        if (query.Single().NoticeStatus == 3)
+                            result.Add(string.Format("编号 {0} 审核失败：此通知已失效！", id));
+                        if (query.Single().NoticeStatus == 2)
+                            result.Add(string.Format("编号 {0} 审核失败：此通知已被拒绝！", id));
+                        if (query.Single().NoticeStatus == 1)
+                            result.Add(string.Format("编号 {0} 审核失败：此通知已通过审核，无需重复操作！", id));
+
+                        //修改通知状态为已通过审核，并记录审核时间
+                        Pass = query.Single();
+                        Pass.NoticeStatus = 1;  //通过申请
+                        Pass.CheckTime = DateTime.Now;//记录审核通过的时间
+
+                        //提交数据库修改
+                        EFHelper.Update<Notice>(Pass);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    while (ex.InnerException != null)
+                        ex = ex.InnerException;
+                    result.Add(string.Format("编号 {0} 审核失败：" + ex.Message, id));
                 }
             }
-            catch (Exception ex)
-            {
-                while (ex.InnerException != null)
-                    ex = ex.InnerException;
-                return ResponseHelper.Failure(ex.Message);
-            }
+
+            return ResponseHelper.Success(result);
 
         }
 

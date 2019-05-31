@@ -39,7 +39,7 @@ namespace YOY.WCFService
         ResponseFormat = WebMessageFormat.Json,
         BodyStyle = WebMessageBodyStyle.WrappedRequest,
         UriTemplate = "PassNotice")]
-        Stream PassNotice(string NoticeID);
+        Stream PassNotice(string[] NoticeID);
 
         /// <summary>
         /// 审核拒绝申请
@@ -575,7 +575,6 @@ namespace YOY.WCFService
         Stream GetProjectOperationsByKey(string ProjectID);
         #endregion
 
-
         #region ProjectRecord表（动态）
 
         [OperationContract]
@@ -594,7 +593,6 @@ namespace YOY.WCFService
         UriTemplate = "Data/ProjectRecord/{ProjectID}")]
         Stream GetProjectRecordsByKey(string ProjectID);
         #endregion
-
 
         #endregion
 

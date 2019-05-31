@@ -41,6 +41,12 @@ namespace YOY.WCFService
                 Remarks = "",
                 CheckTime = null
             };
+            if ( VisitorID == "Admin")
+            {
+                notice.NoticeStatus = 1;
+                notice.CheckTime = DateTime.Now;
+            }
+            
 
             try
             {

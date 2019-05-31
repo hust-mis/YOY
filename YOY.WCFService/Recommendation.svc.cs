@@ -55,22 +55,18 @@ namespace YOY.WCFService
                 #endregion
                 try
                 {
-                    using (var db = new EFDbContext())
-                    {
+                    var query = from p in EFHelper.GetAll<Project>()
+                                select new { p.ProjectID, p.ProjectName, p.ProjectState, p.ProjectInfo, p.ProjectPic, p.OpeningTime, p.ProjectAttention, p.ProjectForPeople, Record = Math.Sqrt((p.ProjectXLocation - vx) * (p.ProjectXLocation - vx) + (p.ProjectYLocation - vy) * (p.ProjectYLocation - vy)) };
 
-                        var query = from p in db.Projects
-                                    join r in db.ProjectRecord on p.ProjectID equals r.ProjectID
-                                    select new { p.ProjectID, p.ProjectName, p.ProjectState, p.ProjectInfo, p.ProjectPic, p.OpeningTime, p.ProjectAttention, p.ProjectForPeople, Record = Math.Sqrt((p.ProjectXLocation - vx) * (p.ProjectXLocation - vx) + (p.ProjectYLocation - vy) * (p.ProjectYLocation - vy)) };
+                    var result = from qu in query
+                                 orderby qu.Record
+                                 select qu;
 
-                        var result = from qu in query
-                                     orderby qu.Record
-                                     select qu;
+                    if (result.Count() == 0)
+                        return ResponseHelper.Success(null);
 
-                        if (result.Count() == 0)
-                            return ResponseHelper.Success(null);
-
-                        return ResponseHelper.Success(result.ToList());
-                    }
+                    return ResponseHelper.Success(result.ToList());
+                    
                 }
                 catch (Exception ex)
                 {
@@ -87,21 +83,27 @@ namespace YOY.WCFService
             {
                 try
                 {
-                    using (var db = new EFDbContext())
-                    {
-                        var wait = db.ProjectOperation.Where(o => o.PlayState == 0);
-                        var query = from p in db.Projects
-                                    join w in wait on p.ProjectID equals w.ProjectID
-                                    select new { p.ProjectID, p.ProjectName, p.ProjectState, p.ProjectInfo, p.ProjectPic, p.OpeningTime, p.ProjectAttention, p.ProjectForPeople, Record = wait.Count() };
+                    var query = from p in EFHelper.GetAll<Project>()
+                                select new
+                                {
+                                    p.ProjectID,
+                                    p.ProjectName,
+                                    p.ProjectState,
+                                    p.ProjectInfo,
+                                    p.ProjectPic,
+                                    p.OpeningTime,
+                                    p.ProjectAttention,
+                                    p.ProjectForPeople,
+                                    Record = EFHelper.GetAll<Operation>().Where(t => t.PlayState == 0 && t.ProjectID == p.ProjectID).Count()
+                                };
 
-                        var result = from q in query
-                                     orderby q.Record
-                                     select q;
+                    var result = from qu in query
+                                 orderby qu.Record
+                                 select qu;
 
-                        if (result.Count() == 0)
-                            return ResponseHelper.Success(null);
-                        return ResponseHelper.Success(result.ToList());
-                    }
+                    if (result.Count() == 0)
+                        return ResponseHelper.Success(null);
+                    return ResponseHelper.Success(result.ToList());
                 }
                 catch (Exception ex)
                 {

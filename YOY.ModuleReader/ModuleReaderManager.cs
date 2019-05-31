@@ -212,8 +212,7 @@ namespace YOY.ModuleReader
                     var updateItems = from enter in enterTemp
                                        group enter by enter.EPCString into up
                                        select new { CardID = up.Key, Time = up.Max(t => t.Time) };
-                    enterTemp.Clear();
-
+                    
                     var v2c = from v in EFHelper.GetAll<Visitor2Card>()
                               join u in updateItems on v.CardID equals u.CardID
                               select new { v.VisitorID, u.Time };
@@ -242,6 +241,7 @@ namespace YOY.ModuleReader
                         }
                     }
 
+                    enterTemp.Clear();
                 }
                 catch(Exception ex)
                 {
@@ -257,12 +257,12 @@ namespace YOY.ModuleReader
                     var updateItems = from exit in exitTemp
                                       group exit by exit.EPCString into up
                                       select new { CardID = up.Key, Time = up.Max(t => t.Time) };
-                    enterTemp.Clear();
 
                     var v2c = from v in EFHelper.GetAll<Visitor2Card>()
                               join u in updateItems on v.CardID equals u.CardID
                               select new { v.VisitorID, u.Time };
 
+                   
                     if (v2c.Count() > 0)
                     {
                         using (var db = new EFDbContext())
@@ -283,6 +283,7 @@ namespace YOY.ModuleReader
                             db.SaveChanges();
                         }
                     }
+                    enterTemp.Clear();
 
                 }
                 catch (Exception ex)
@@ -396,7 +397,7 @@ namespace YOY.ModuleReader
                     var updateItems = from project in projectTemp
                                       group project by project.EPCString into up
                                       select new { CardID = up.Key, Time = up.Max(t => t.Time) };
-                    projectTemp.Clear();
+                   
 
                     var v2c = from v in EFHelper.GetAll<Visitor2Card>()
                               join u in updateItems on v.CardID equals u.CardID
@@ -467,6 +468,9 @@ namespace YOY.ModuleReader
                             }
                         }
                     }
+
+                    projectTemp.Clear();
+
 
                 }
                 catch (Exception ex)
