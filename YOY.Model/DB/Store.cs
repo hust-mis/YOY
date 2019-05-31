@@ -58,13 +58,13 @@ namespace YOY.Model.DB
         /// </summary>
         [Column("StoreXLocation")]
         [DataMember]
-        public int StoreXLocation { get; set; }
+        public int? StoreXLocation { get; set; }
 
         /// <summary>
         /// 店铺Y坐标
         /// </summary>
         [Column("StoreYLocation")]
         [DataMember]
-        public int StoreYLocation { get; set; }
+        public int? StoreYLocation { get; set; }
     }    
 }

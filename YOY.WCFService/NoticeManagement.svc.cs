@@ -40,9 +40,6 @@ namespace YOY.WCFService
                 NoticeStatus = 0,
                 Remarks = "",
                 CheckTime = null
-
-
-
             };
 
             try
